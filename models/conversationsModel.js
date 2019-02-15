@@ -1,0 +1,16 @@
+var mongoose = require('mongoose');
+
+var Schema = mongoose.Schema;
+
+var convSchema = new Schema({
+    idPerson1: String,
+    idPerson2: String, 
+    messages: [{
+        timeStamp: String,
+        message: String
+    }]
+});
+
+var conversations = mongoose.model('conversations', convSchema);
+
+module.exports = conversations;
