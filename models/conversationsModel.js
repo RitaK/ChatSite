@@ -6,7 +6,7 @@ var convSchema = new Schema({
     idPerson1: String,
     idPerson2: String, 
     messages: [{
-        timeStamp: String,
+        timeStamp: Date,
         message: String
     }]
 });

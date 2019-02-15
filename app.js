@@ -5,6 +5,7 @@ var config = require('./config');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
+var connectedUsers = {};
 
 var port = process.env.PORT || 3000;
 
@@ -23,6 +24,13 @@ io.on('connection', function(socket){
     socket.on('disconnect', function(){
         console.log('user disconnected');
       });
+    //saving a reference to this user's socket
+    //connectedUsers[curruser]=socket;
+    socket.on('chat message', function(data){
+        console.log('message: ' + data.message);
+        //connectedUsers[selectedUser].emit('chat message', {message: msg});
+        io.emit('chat message', {message: data.message});
+    });
 });
 
 mongoose.connect(config.getDbConnectionString(), { useNewUrlParser: true });

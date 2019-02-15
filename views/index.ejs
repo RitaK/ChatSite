@@ -1,10 +1,21 @@
 <html>
     <head>
         <script src="/socket.io/socket.io.js"></script>
-        <script>
-                var socket = io();
-        </script>
         <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+        <script>
+                $(function () {
+                var socket = io();
+                $('form').submit(function(e){
+                e.preventDefault(); // prevents page reloading
+                socket.emit('chat message', {message: $('#m').val(), selectedUser: "moshe"});
+                $('#m').val('');
+                return false;
+                });
+                socket.on('chat message', function(data){
+                $('#messages').append($('<li>').text(data.message));
+                });
+            });
+        </script>
     </head>
     <body>
             <ul id="messages"></ul>
