@@ -24,11 +24,10 @@ app.get('/', function(req, res) {
 //Connecting to the DB
 mongoose.set('useCreateIndex', true);
 mongoose.connect(config.getDbConnectionString(), { useNewUrlParser: true });
-//Getting the service that handles the db
-var dbService = dbController(app);
+//Getting the service that handles the bd
+var dbUtils = dbController(app);
 /* setupController(); */
-var conversation = dbService.findConversation(['rita', 'moshe']);
-console.log(conversation);
+
 
 io.on('connection', function(socket){
     console.log('A user is connected');
