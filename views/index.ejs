@@ -5,22 +5,59 @@
         <script>
                 $(function () {
                 var socket = io();
-                $('form').submit(function(e){
-                e.preventDefault(); // prevents page reloading
-                socket.emit('chat message', {message: $('#m').val(), selectedUser: "moshe"});
-                $('#m').val('');
-                return false;
+                var $messageForm = $('#messageForm');
+                var $message = $('#m');
+                var $messageSection = $('#messageSection');
+                var $userFormSection = $('#userFormSection');
+                var $userForm = $('#userForm');
+                var $username = $('#username');
+
+
+                $messageForm.submit(function(e){
+                    e.preventDefault(); // prevents page reloading
+                    socket.emit('chat message', {message: $('#m').val(), selectedUser: "moshe"});
+                    $('#m').val('');
+                    return false;
                 });
-                socket.on('chat message', function(data){
-                $('#messages').append($('<li>').text(data.message));
+
+                $userForm.submit(function(e){
+                    e.preventDefault(); // prevents page reloading
+                    socket.emit('new user', $username.val(), function(data){
+                        if(data){
+                            $userFormSection.hide()
+                            $messageSection.show();
+                        }
+                    });
+                    $username.val('');
+                    return false;
+                });
+
+                socket.on('new message', function(data){
+                $('#messages').append($('<li>').text(data.username + ': ' + data.message));
                 });
             });
         </script>
+        <style>
+            #messageSection{
+                display:none;
+            }
+        </style>
     </head>
     <body>
-            <ul id="messages"></ul>
-            <form action="">
-              <input id="m" autocomplete="off" /><button>Send</button>
-            </form>
+        <div id="userFormSection">
+                <label id="Enter username"></ul>
+                <form id="userForm" action="">
+                    <input id="username" />
+                    <br />
+                    <button type="submit">Login</button>
+                </form>
+        </div>
+        <div id="messageSection">
+                <ul id="messages"></ul>
+                <form id="messageForm" action="">
+                  <input id="m" autocomplete="off" /><button type="submit">Send</button>
+                </form>
+        </div>
+            
     </body>
 </html>
