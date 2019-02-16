@@ -4,6 +4,8 @@ var mongoose = require('mongoose');
 var config = require('./config');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var dbController = require('./controllers/dbController');
+var setupController = require('./controllers/setupController');
 
 var connectedUsers = [];
 
@@ -19,10 +21,19 @@ app.get('/', function(req, res) {
 	
 });
 
+//Connecting to the DB
+mongoose.set('useCreateIndex', true);
+mongoose.connect(config.getDbConnectionString(), { useNewUrlParser: true });
+//Getting the service that handles the db
+var dbService = dbController(app);
+/* setupController(); */
+var conversation = dbService.findConversation(['rita', 'moshe']);
+console.log(conversation);
+
 io.on('connection', function(socket){
     console.log('A user is connected');
 
-    //Disconnecting form the server
+    //Disconnecting from the server
     socket.on('disconnect', function(){
         var username = socket.username || "";
         if(connectedUsers.length > 0 && username != ""){
@@ -41,12 +52,14 @@ io.on('connection', function(socket){
     //New user
     socket.on('new user', function(data, callback){
         callback(true);
+        dbService.addUser(data);
         socket.username = data;
         connectedUsers.push(socket.username);
     })
 });
 
-mongoose.connect(config.getDbConnectionString(), { useNewUrlParser: true });
+
+
 
 var server = http.listen(port , function(){
     console.log('Server is running on port ' + server.address().port);

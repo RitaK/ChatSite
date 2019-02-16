@@ -3,10 +3,10 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var convSchema = new Schema({
-    idPerson1: String,
-    idPerson2: String, 
+    usernamesInConv: [{type: String}],
     messages: [{
         timeStamp: Date,
+        sender: String,
         message: String
     }]
 });
