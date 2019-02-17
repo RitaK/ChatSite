@@ -14,6 +14,7 @@ var port = process.env.PORT || 3000;
 
 app.use('/', express.static(__dirname + '/public'));
 
+app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
 app.get('/', function(req, res) {
@@ -46,10 +47,24 @@ io.on('connection', function(socket){
       });
 
     //Sending a message
-    socket.on('chat message', function(data){
-        console.log('message: ' + data.message);
+    socket.on('chat message', function(data, callback){
+        //Need to orginize this.
+        //Also add group option
+        //AND - When the receiving user is not connected - check for this and just save it.
+        //Bug with the messages - somehow rita's messages were sent to moshe-sigal conversation
+        
         dbUtils.saveMsgToConv(data.to, data.message);
-        socket.to(data.to).emit('new message', {message: data.message, from: socket.username});
+        var index = data.to.indexOf(socket.username);
+            if (index > -1) {
+                data.to.splice(index, 1); 
+            }
+        //show the message on the writer's screen
+        callback({message: data.message.message, from: socket.username});
+        console.log('message: ' + data.message.message);
+        //show the message on the receiver's screen
+        if(connectedUsers[data.to]){
+            connectedUsers[data.to].emit('new message', {message: data.message.message, from: socket.username});
+        }
     });
 
     //New user (or user connected)
@@ -69,6 +84,10 @@ io.on('connection', function(socket){
         usersInConv.push(data.userSelected);
         usersInConv.push(socket.username); */
         dbUtils.findConversation(data.userSelected, callback);
+    });
+
+    socket.on('ping', msg => {
+        alert(msg);
     });
 });
 

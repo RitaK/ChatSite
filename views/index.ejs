@@ -15,6 +15,7 @@
             var $conversationsSection = $('#conversationsSection');
             var $radios;
             var $selectedConv ;
+            var username = "";
         
         
             $messageForm.submit(function(e){
@@ -22,16 +23,20 @@
                 var usersArr = $selectedConv.val().split(" ");
                 var message = {
                         timeStamp: getCurrDate(),
-                        sender: $username.val(),
+                        sender: username,
                         message: $('#m').val()
                     };
-                socket.emit('chat message', {message: message, to : usersArr});
+                    
+                socket.emit('chat message', {message: message, to : usersArr}, function(data){
+                    $('#messages').append($('<li>').text(getCurrDate() + ' <' + data.from + '>: ' + data.message));
+                });
                 $('#m').val('');
                 return false;
             });
         
             $userForm.submit(function(e){
                 e.preventDefault(); // prevents page reloading
+                username = $username.val();
                 socket.emit('new user', $username.val(), function(data){
                     if(data){
                         $userFormSection.hide();
@@ -68,7 +73,12 @@
             });
         
             socket.on('new message', function(data){
-                if(data.from === $selectedConv.val()){
+                var selectedUsersArr = $selectedConv.val().split(" ");
+                var index = selectedUsersArr.indexOf(username);
+                if (index > -1) {
+                    selectedUsersArr.splice(index, 1); 
+                }
+                if(data.from === selectedUsersArr[0] && selectedUsersArr.length == 1){
                     $('#messages').append($('<li>').text(getCurrDate() + ' <' + data.from + '>: ' + data.message));
                 }
                 else{
