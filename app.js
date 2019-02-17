@@ -7,6 +7,7 @@ var io = require('socket.io')(http);
 var dbController = require('./controllers/dbController');
 var setupController = require('./controllers/setupController');
 
+//Sockets of all connected users at this moment
 var connectedUsers = [];
 
 var port = process.env.PORT || 3000;
@@ -24,7 +25,7 @@ app.get('/', function(req, res) {
 //Connecting to the DB
 mongoose.set('useCreateIndex', true);
 mongoose.connect(config.getDbConnectionString(), { useNewUrlParser: true });
-//Getting the service that handles the bd
+//Getting the utils that handle the bd
 var dbUtils = dbController(app);
 /* setupController(); */
 
@@ -38,7 +39,9 @@ io.on('connection', function(socket){
         if(connectedUsers.length > 0 && username != ""){
             connectedUsers.splice(connectedUsers.indexOf(username), 1);
         }
-        
+
+        //Make user appear offline
+        io.emit('disconnected user', username);
         console.log('User ' + username + ' disconnected');
       });
 
@@ -48,12 +51,13 @@ io.on('connection', function(socket){
         io.emit('new message', {message: data.message, username: socket.username});
     });
 
-    //New user
+    //New user (or user connected)
     socket.on('new user', function(data, callback){
-        callback(true);
-        dbService.addUser(data);
+        dbUtils.getAllUserConv(data, callback);
+        dbUtils.addUser(data);
         socket.username = data;
-        connectedUsers.push(socket.username);
+        //Adding this socket to the connectedUsers
+        connectedUsers[socket.username] = socket;
     })
 });
 

@@ -2,43 +2,58 @@
     <head>
         <script src="/socket.io/socket.io.js"></script>
         <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-        <script>
-                $(function () {
-                var socket = io();
-                var $messageForm = $('#messageForm');
-                var $message = $('#m');
-                var $messageSection = $('#messageSection');
-                var $userFormSection = $('#userFormSection');
-                var $userForm = $('#userForm');
-                var $username = $('#username');
-
-
-                $messageForm.submit(function(e){
-                    e.preventDefault(); // prevents page reloading
-                    socket.emit('chat message', {message: $('#m').val(), selectedUser: "moshe"});
-                    $('#m').val('');
-                    return false;
-                });
-
-                $userForm.submit(function(e){
-                    e.preventDefault(); // prevents page reloading
-                    socket.emit('new user', $username.val(), function(data){
-                        if(data){
-                            $userFormSection.hide()
-                            $messageSection.show();
-                        }
-                    });
-                    $username.val('');
-                    return false;
-                });
-
-                socket.on('new message', function(data){
-                $('#messages').append($('<li>').text(data.username + ': ' + data.message));
-                });
+        <script >
+        $(function () {
+            var socket = io();
+            var $messageForm = $('#messageForm');
+            var $message = $('#m');
+            var $messageSection = $('#messageSection');
+            var $userFormSection = $('#userFormSection');
+            var $userForm = $('#userForm');
+            var $username = $('#username');
+            var $usersSection = $('#messageSection');
+            var $conversationsSection = $('#conversationsSection');
+        
+        
+            $messageForm.submit(function(e){
+                e.preventDefault(); // prevents page reloading
+                socket.emit('chat message', {message: $('#m').val(), selectedUser: "moshe"});
+                $('#m').val('');
+                return false;
             });
+        
+            $userForm.submit(function(e){
+                e.preventDefault(); // prevents page reloading
+                socket.emit('new user', $username.val(), function(data){
+                    if(data){
+                        $userFormSection.hide();
+                        $messageSection.show();
+                        $conversationsSection.show();
+                        data.forEach(function(person){
+                            var usersInConversation = "";
+                            person.usernamesInConv.forEach(function(username){
+                                usersInConversation += ' ' + username;
+                            });
+                            $('#conversations').append($('<li>').text((usersInConversation)));
+                        })
+                        
+                    }
+                });
+                $username.val('');
+                return false;
+            });
+        
+            socket.on('new message', function(data){
+                $('#messages').append($('<li>').text(data.username + ': ' + data.message));
+            });
+        
+            socket.on('disconnected user', function(data){
+                
+            });
+        });
         </script>
         <style>
-            #messageSection{
+            #messageSection, #usersSection, #conversationsSection{
                 display:none;
             }
         </style>
@@ -58,6 +73,11 @@
                   <input id="m" autocomplete="off" /><button type="submit">Send</button>
                 </form>
         </div>
-            
+        <div id="usersSection">
+            <ul id="users"></ul>
+        </div>  
+        <div id="conversationsSection">
+            <ul id="conversations"></ul>
+        </div> 
     </body>
 </html>
