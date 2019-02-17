@@ -4,7 +4,7 @@
         <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
         <script >
         $(function () {
-            var socket = io();
+            var socket = io({transports: ['websocket'], upgrade: false});
             var $messageForm = $('#messageForm');
             var $message = $('#m');
             var $messageSection = $('#messageSection');
@@ -87,7 +87,10 @@
             });
         
             socket.on('disconnected user', function(data){
-                
+                if(data === username){
+                    $userFormSection.show();
+                    $messageSection.hide();
+                }
             });
 
             socket.on('conversation messages', function(data){

@@ -23,8 +23,11 @@ app.get('/', function(req, res) {
 	
 });
 
-//Connecting to the DB
+//Prevents warning bug from mongoose
 mongoose.set('useCreateIndex', true);
+mongoose.set('useFindAndModify', false);
+
+//Connecting to the DB
 mongoose.connect(config.getDbConnectionString(), { useNewUrlParser: true });
 //Getting the utils that handle the bd
 var dbUtils = dbController(app);
@@ -53,7 +56,9 @@ io.on('connection', function(socket){
         //AND - When the receiving user is not connected - check for this and just save it.
         //Bug with the messages - somehow rita's messages were sent to moshe-sigal conversation
         
-        dbUtils.saveMsgToConv(data.to, data.message);
+        //Prevents issue in mongodb when taking the data.to users array
+        var newArr = data.to.slice();
+        dbUtils.saveMsgToConv(newArr, data.message);
         var index = data.to.indexOf(socket.username);
             if (index > -1) {
                 data.to.splice(index, 1); 

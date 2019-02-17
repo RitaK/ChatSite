@@ -87,9 +87,9 @@ module.exports = function(app){
                         "usernamesInConv": {"$size": users.length.toString()}
                     }] 
             };
-            Conversations.findOneAndUpdate(query, {$push: {messages: message}}, function(err){
+            Conversations.findOneAndUpdate(query, {$push: {messages: message}}, function(err, docs){
                 if(err){
-                    console.log('Error in saving a message: '+ err);
+                    console.log('Error in saving a message: '+ err + docs);
                 }
             });
         }
