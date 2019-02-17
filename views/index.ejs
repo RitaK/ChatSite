@@ -13,11 +13,19 @@
             var $username = $('#username');
             var $usersSection = $('#messageSection');
             var $conversationsSection = $('#conversationsSection');
+            var $radios;
+            var $selectedConv ;
         
         
             $messageForm.submit(function(e){
                 e.preventDefault(); // prevents page reloading
-                socket.emit('chat message', {message: $('#m').val(), selectedUser: "moshe"});
+                var usersArr = $selectedConv.val().split(" ");
+                var message = {
+                        timeStamp: getCurrDate(),
+                        sender: $username.val(),
+                        message: $('#m').val()
+                    };
+                socket.emit('chat message', {message: message, to : usersArr});
                 $('#m').val('');
                 return false;
             });
@@ -31,12 +39,28 @@
                         $conversationsSection.show();
                         data.forEach(function(person){
                             var usersInConversation = "";
-                            person.usernamesInConv.forEach(function(username){
-                                usersInConversation += ' ' + username;
+                            person.usernamesInConv.forEach(function(username, idx, array){
+                                
+                                if (idx === array.length - 1){
+                                    usersInConversation += username;
+                                }
+                                else{
+                                    usersInConversation += username + ' ';
+                                }
                             });
-                            $('#conversations').append($('<li>').text((usersInConversation)));
-                        })
-                        
+                            $('#conversations').append($('<li>').text((usersInConversation))).append($('<input type="radio" name="userRadio">').val(usersInConversation));
+                        });
+                        $radios = $('input[name="userRadio"]');
+                        $("input[name=userRadio]").prop("checked",true);
+                        $selectedConv =  $radios.filter(':checked');
+                        $radios.change(function() {
+                            $selectedConv = $radios.filter(':checked');
+                            var usersArr = $selectedConv.val().split(" ");
+                            socket.emit('selected user', {userSelected: usersArr}, updateMessages);
+                            
+                        });
+                        var usersArr = $selectedConv.val().split(" ");
+                        socket.emit('selected user', {userSelected: usersArr}, updateMessages);
                     }
                 });
                 $username.val('');
@@ -44,12 +68,47 @@
             });
         
             socket.on('new message', function(data){
-                $('#messages').append($('<li>').text(data.username + ': ' + data.message));
+                if(data.from === $selectedConv.val()){
+                    $('#messages').append($('<li>').text(getCurrDate() + ' <' + data.from + '>: ' + data.message));
+                }
+                else{
+                    //TODO
+                }
             });
         
             socket.on('disconnected user', function(data){
                 
             });
+
+            socket.on('conversation messages', function(data){
+                
+            });//note sure if needed
+            
+
+            var updateMessages = function(docs){
+                $("#messages").empty();
+                docs[0].messages.forEach(function(msg){
+                    $('#messages').append($('<li>').text(msg.timeStamp + ' <' + msg.sender + '>: ' + msg.message));
+                });
+            }
+
+            var getCurrDate = function(){
+                var today = new Date();
+                var dd = today.getDate();
+                var mm = today.getMonth() + 1; 
+                var yyyy = today.getFullYear();
+
+                if (dd < 10) {
+                dd = '0' + dd;
+                }
+
+                if (mm < 10) {
+                mm = '0' + mm;
+                }
+
+                today = mm + '/' + dd + '/' + yyyy;
+                return today;
+            }
         });
         </script>
         <style>

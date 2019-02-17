@@ -48,17 +48,28 @@ io.on('connection', function(socket){
     //Sending a message
     socket.on('chat message', function(data){
         console.log('message: ' + data.message);
-        io.emit('new message', {message: data.message, username: socket.username});
+        dbUtils.saveMsgToConv(data.to, data.message);
+        socket.to(data.to).emit('new message', {message: data.message, from: socket.username});
     });
 
     //New user (or user connected)
     socket.on('new user', function(data, callback){
+        //Get all user's conversations and use callback to present them to the client
         dbUtils.getAllUserConv(data, callback);
         dbUtils.addUser(data);
         socket.username = data;
         //Adding this socket to the connectedUsers
         connectedUsers[socket.username] = socket;
-    })
+    });
+
+    //The current user selected a user to talk to. 
+    //Here we load all the messages from that conversation
+    socket.on('selected user', function(data, callback){
+        /* var usersInConv = [];
+        usersInConv.push(data.userSelected);
+        usersInConv.push(socket.username); */
+        dbUtils.findConversation(data.userSelected, callback);
+    });
 });
 
 

@@ -75,7 +75,6 @@ module.exports = function(app){
                 else{
                     callback(docs);
                 }
-                
             });
         },
 
