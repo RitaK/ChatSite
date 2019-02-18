@@ -42,6 +42,7 @@ module.exports = function(){
 
             {
                 usernamesInConv: ['moshe', 'sigal', 'rita'],
+                groupName: 'The gang1',
                 messages: [{
                     timeStamp: new Date(2019, 02, 16),
                     sender: 'rita',
@@ -56,6 +57,26 @@ module.exports = function(){
                     timeStamp: new Date(2019, 02, 16),
                     sender: 'sigal',
                     message: "How's it going?"
+                }
+            ]
+            },
+            {
+                usernamesInConv: ['moshe', 'sigal', 'rita'],
+                groupName: 'The gang2',
+                messages: [{
+                    timeStamp: new Date(2019, 02, 16),
+                    sender: 'sigal',
+                    message: "Hi I'm Sigal"
+                },
+                {
+                    timeStamp: new Date(2019, 02, 16),
+                    sender: 'rita',
+                    message: "Oh hi there"
+                },
+                {
+                    timeStamp: new Date(2019, 02, 16),
+                    sender: 'moshe',
+                    message: "Whatsupppp"
                 }
             ]
             },

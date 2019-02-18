@@ -5,6 +5,6 @@ module.exports = {
         return 'mongodb+srv://' +
         configValues.uname + 
         ':' + configValues.pwd +
-        '@clusterr-7lbci.mongodb.net/test?retryWrites=true'
+        '@clusterr-7lbci.mongodb.net/chatApp?retryWrites=true'
     }
 }

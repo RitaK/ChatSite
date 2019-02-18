@@ -61,11 +61,11 @@
                         $radios.change(function() {
                             $selectedConv = $radios.filter(':checked');
                             var usersArr = $selectedConv.val().split(" ");
-                            socket.emit('selected user', {userSelected: usersArr}, updateMessages);
+                            socket.emit('selected user', {usersInChatSelected: usersArr}, updateMessages);
                             
                         });
                         var usersArr = $selectedConv.val().split(" ");
-                        socket.emit('selected user', {userSelected: usersArr}, updateMessages);
+                        socket.emit('selected user', {usersInChatSelected: usersArr}, updateMessages);
                     }
                 });
                 $username.val('');
