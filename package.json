@@ -4,7 +4,10 @@
   "description": "chat app",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "client": "cd client && yarn start",
+    "server": "nodemon server.js",
+    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
   },
   "repository": {
     "type": "git",
@@ -21,6 +24,11 @@
     "express": "^4.16.4",
     "http": "0.0.0",
     "mongoose": "^5.4.12",
+    "react": "^16.8.3",
     "socket.io": "^2.2.0"
+  },
+  "devDependencies": {
+    "concurrently": "^4.1.0",
+    "typescript": "^3.3.3333"
   }
 }
