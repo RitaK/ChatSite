@@ -3,6 +3,7 @@ import './App.css';
 import Chat from './containers/Chat.js';
 import Login from './containers/Login';
 import Registration from './containers/Registration';
+import 'typeface-roboto';
 
 class App extends Component {
   constructor(props){
