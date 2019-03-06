@@ -32,7 +32,7 @@ class LoginRegButtons extends Component{
         let secLen = this.props.secondaryButtonLength;
         let mainLen = this.props.mainButtonLength;
         return (
-            <Grid container>
+            <>
                 <Grid item sm= {secLen} >
                     <Button className = {classes.Button} variant="text" 
                     color="primary" fullWidth = {true} size="small"
@@ -48,11 +48,8 @@ class LoginRegButtons extends Component{
                         {this.props.mainText}
                     </Button>
                 </Grid>
-            </Grid>
-                
-            
+            </>
         )
-        
     };
 }
 

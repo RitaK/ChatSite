@@ -22,13 +22,15 @@ class Registration extends Component{
         super(props);
         this.state = {
             username: {text: '', error: false},
-            password: {text: '', error: false}
+            password: {text: '', error: false},
+            passwordRetyped: {text: '', matchingError: false}
     
         }
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
         this.handleUsernameChange = this.handleUsernameChange.bind(this);
         this.handleCreateNewAccount = this.handleCreateNewAccount.bind(this);
         this.handleLoginInstead = this.handleLoginInstead.bind(this);
+        this.handleComparePasswords = this.handleComparePasswords.bind(this);
     }
 
     handleUsernameChange(event){
@@ -56,6 +58,19 @@ class Registration extends Component{
         //this.props.handleScreenChange(this.state.username.text, this.state.password.text);
     }
 
+    handleComparePasswords(event){
+        let userPasswordRetpyed = event.target.value;
+        let prevTypedPassword = this.state.password.text;
+        if(userPasswordRetpyed === ''){
+            this.setState({passwordRetyped:{text: event.target.value, matchingError: false}})
+        }else if(userPasswordRetpyed === prevTypedPassword){
+            this.setState({passwordRetyped:{text: event.target.value, matchingError: false}})
+        }
+        else{
+            this.setState({passwordRetyped:{text: event.target.value, matchingError: true}});
+        }
+    }
+
     render(){
         const {classes} = this.props;
         return(
@@ -67,11 +82,16 @@ class Registration extends Component{
                         <TextField className = {classes.TextField} 
                         fullWidth= {true} onChange={this.handleUsernameChange}
                         label="User Name" value = {this.state.username.text}
-                        error= {this.state.username.error} />
+                        error= {this.state.username.error} autoComplete="username" 
+                        required = {true}/>
                         <TextField className = {classes.TextField} 
                         fullWidth= {true} onChange={this.handlePasswordChange}
                         label= "Password" type="Password" autoComplete="current-password"
-                        value = {this.state.password.text} />
+                        value = {this.state.password.text} required = {true}/>
+                        <TextField className = {classes.TextField} 
+                        fullWidth= {true} onChange={this.handleComparePasswords}
+                        label= "Retype Password" type="Password" 
+                        value = {this.state.passwordRetyped.text} error = {this.state.passwordRetyped.matchingError} required = {true}/>
                     </>
                 }
                 buttons = {

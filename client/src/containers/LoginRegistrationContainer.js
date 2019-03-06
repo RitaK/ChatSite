@@ -17,19 +17,8 @@ const styles = theme => ({
         'padding-left': theme.spacing.unit * 5,
         maxWidth: 400
     },
-    TextField: {
-        'margin-top': theme.spacing.unit * 2,
-        'margin-bottom': theme.spacing.unit
-    },
-    Button: {
-        'margin-top': theme.spacing.unit * 2
-    },
     Typography: {
         width: '100%'
-    },
-    Icon: {
-        width: '100%',
-        'margin-bottom': theme.spacing.unit *2
     }
   });
 
