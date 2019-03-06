@@ -19,15 +19,15 @@ class Index extends Component {
   constructor(props){
     super(props);
     this.state = {
-      loginScreen: true,
-      registrationScreen: false,
+      loginScreen: false,
+      registrationScreen: true,
       chatScreen: false
     }
     this.handleScreenChange = this.handleScreenChange.bind(this);
   }
 
   handleScreenChange(event){
-    this.setState({})
+    //this.setState({})
   }
 
   render() {
@@ -41,7 +41,7 @@ class Index extends Component {
             
           </header>
           {this.state.loginScreen && <Login onLoggedClick = {this.handleScreenChange}/>}
-          {this.state.registrationScreen && <Registration />}
+          {this.state.registrationScreen && <Registration onLoggedClick = {this.handleScreenChange} />}
           {this.state.chatScreen && <Chat />}
         </div>
       

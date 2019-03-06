@@ -65,7 +65,7 @@ class Login extends Component{
     }
 
     handleLogin(){
-        
+        this.props.handleScreenChange(this.state.username.text, this.state.password.text);
     }
     
     render(){
