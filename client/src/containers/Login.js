@@ -11,8 +11,11 @@ const styles = theme => ({
       //paddingTop: theme.spacing.unit * 14,
     },
     Paper: {
-        padding: theme.spacing.unit * 3,
         margin: 'auto',
+        'padding-top': theme.spacing.unit * 7,
+        'padding-right': theme.spacing.unit * 5,
+        'padding-bottom': theme.spacing.unit * 5,
+        'padding-left': theme.spacing.unit * 5,
         maxWidth: 400
     },
     TextField: {
@@ -27,7 +30,7 @@ const styles = theme => ({
     },
     Lock: {
         width: '100%',
-        'margin-bottom': theme.spacing.unit
+        'margin-bottom': theme.spacing.unit *2
     }
   });
 
@@ -67,13 +70,17 @@ class Login extends Component{
                         fullWidth= {true} onChange={this.handlePasswordChange}
                         label= "Password" type="Password" autoComplete="current-password"/>
                         <Grid item  sm= {4}>
-                            <Button className = {classes.Button} variant="contained" color="primary" fullWidth = {true}>
+                            <Button className = {classes.Button} variant="contained"
+                            size="small" color="primary" fullWidth = {true}>
                                 Login
                             </Button>
                         </Grid>
-                        <Grid item>
-                            <Button className = {classes.Button} variant="contained" color="primary" fullWidth = {true}>
-                                Create an account
+                        <Grid item sm= {3}>
+                        </Grid>
+                        <Grid item sm= {5} >
+                            <Button className = {classes.Button} variant="text" 
+                            color="primary" fullWidth = {true} size="small">
+                                Create account
                             </Button>
                         </Grid>
                     </Grid>
