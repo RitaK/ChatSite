@@ -38,19 +38,34 @@ class Login extends Component{
     constructor(props){
         super(props);
         this.state = {
-            username: 'username',
-            password: 'password'
+            username: {text: '', error: false},
+            password: {text: '', error: false}
+
         }
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
         this.handleUsernameChange = this.handleUsernameChange.bind(this);
+        this.handleLogin = this.handleLogin.bind(this);
     }
 
     handleUsernameChange(event){
-        this.setState({username: event.target.value})
+        //Check for white spaces
+        let regSpace = /\s/g;
+        let userNameValue = event.target.value;
+        if(regSpace.test(event.target.value)){
+            this.setState({username:{text: userNameValue, error: true}})
+        }
+        else{
+            this.setState({username: {text: userNameValue}});
+        }
+        
     }
 
     handlePasswordChange(event){
-        this.setState({password: event.target.value})
+        this.setState({password: {text: event.target.value}});
+    }
+
+    handleLogin(){
+        
     }
     
     render(){
@@ -65,22 +80,25 @@ class Login extends Component{
                         </Typography>
                         <TextField className = {classes.TextField} 
                         fullWidth= {true} onChange={this.handleUsernameChange}
-                        label="User Name" />
+                        label="User Name" value = {this.state.username.text}
+                        error= {this.state.username.error} />
                         <TextField className = {classes.TextField} 
                         fullWidth= {true} onChange={this.handlePasswordChange}
-                        label= "Password" type="Password" autoComplete="current-password"/>
-                        <Grid item  sm= {4}>
-                            <Button className = {classes.Button} variant="contained"
-                            size="small" color="primary" fullWidth = {true}>
-                                Login
+                        label= "Password" type="Password" autoComplete="current-password"
+                        value = {this.state.password.text} />
+                        <Grid item sm= {5} >
+                            <Button className = {classes.Button} variant="text" 
+                            color="primary" fullWidth = {true} size="small"
+                            onClick = {this.handleLogin}>
+                                Create account
                             </Button>
                         </Grid>
                         <Grid item sm= {3}>
                         </Grid>
-                        <Grid item sm= {5} >
-                            <Button className = {classes.Button} variant="text" 
-                            color="primary" fullWidth = {true} size="small">
-                                Create account
+                        <Grid item  sm= {4}>
+                            <Button className = {classes.Button} variant="contained"
+                            size="small" color="primary" fullWidth = {true}>
+                                Login
                             </Button>
                         </Grid>
                     </Grid>
