@@ -19,10 +19,23 @@ const styles = theme => ({
     },
     Typography: {
         width: '100%'
+    },
+    form: {
+        display: 'contents'
     }
   });
 
 class LoginRegistrationContainer extends Component{
+
+    constructor(props){
+        super(props);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleSubmit(event){
+        this.props.handleSubmit();
+        event.preventDefault();
+    }
 
     render(){
         const {classes} = this.props;
@@ -30,12 +43,15 @@ class LoginRegistrationContainer extends Component{
             <div>
                 <Paper className = {classes.Paper} elevation = {4}>
                     <Grid container>
-                        {this.props.icon}
-                        <Typography className={classes.Typography} component="title" variant="h5" gutterBottom>
-                            {this.props.title}
-                        </Typography>
-                        {this.props.textFields}
-                        {this.props.buttons}
+                        <form onSubmit={this.handleSubmit} className= {classes.form}>
+                            {this.props.icon}
+                            <Typography className={classes.Typography} component="title" variant="h5" gutterBottom>
+                                {this.props.title}
+                            </Typography>
+                            {this.props.textFields}
+                            {this.props.buttons}
+                        </form>
+                        
                     </Grid>
                 </Paper>
             </div> 

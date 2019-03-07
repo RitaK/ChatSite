@@ -14,7 +14,7 @@ class LoginRegButtons extends Component{
         super(props);
 
         this.handleSecondaryClick = this.handleSecondaryClick.bind(this);
-        this.handleMainClick = this.handleMainClick.bind(this);
+        //this.handleMainClick = this.handleMainClick.bind(this);
     }
 
     handleSecondaryClick (event){
@@ -22,10 +22,10 @@ class LoginRegButtons extends Component{
             this.props.onSecondaryClick();
     }
 
-    handleMainClick (event){
+    /* handleMainClick (event){
         if(this.props.onMainClick)
             this.props.onMainClick();
-    }
+    } */
 
     render() {
         const { classes } = this.props;
@@ -44,7 +44,7 @@ class LoginRegButtons extends Component{
                 </Grid>
                 <Grid item  sm= {mainLen}>
                     <Button className = {classes.Button} variant="contained"
-                    size="small" color="primary" fullWidth = {true} onClick = {this.handleMainClick}>
+                    size="small" color="primary" fullWidth = {true}  type='submit'>
                         {this.props.mainText}
                     </Button>
                 </Grid>

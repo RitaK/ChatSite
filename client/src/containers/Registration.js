@@ -89,6 +89,7 @@ class Registration extends Component{
         const {classes} = this.props;
         return(
             <LoginRegistrationContainer
+                handleSubmit = {this.handleCreateAccount} 
                 title = {resources.titles.registration}
                 icon = {<Info className={classes.Info} color="primary"/>}
                 textFields = {
@@ -109,7 +110,7 @@ class Registration extends Component{
                     </>
                 }
                 buttons = {
-                    <LoginRegButtons onMainClick = {this.handleCreateAccount} 
+                    <LoginRegButtons 
                     onSecondaryClick = {this.handleSwitchLogin}
                     mainText = {resources.buttons.createAccount} secondaryText = {resources.buttons.login}
                     mainButtonLength = {8} secondaryButtonLength = {1}/>

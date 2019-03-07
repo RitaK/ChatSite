@@ -3,10 +3,11 @@ import {TextField} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Lock from '@material-ui/icons/Lock';
-import GoogleLogin from 'react-google-login';
+//import GoogleLogin from 'react-google-login';
 import LoginRegButtons from '../components/LoginComponents/LoginRegButtons';
 import LoginRegistrationContainer from './LoginRegistrationContainer';
 import resources from '../resources/default'
+
 
 const styles = theme => ({
     root: {
@@ -81,6 +82,7 @@ class Login extends Component{
         const {classes} = this.props;
         return(
             <LoginRegistrationContainer
+                handleSubmit = {this.handleLogin} 
                 title = {resources.titles.login}
                 icon = {<Lock className = {classes.Lock} color = "primary"/>}
                 textFields = {
@@ -97,7 +99,7 @@ class Login extends Component{
                     </>
                 }
                 buttons = {
-                    <LoginRegButtons onMainClick = {this.handleLogin} 
+                    <LoginRegButtons 
                     onSecondaryClick = {this.handleSwitchCreateAccount}
                     mainText = {resources.buttons.login} secondaryText = {resources.buttons.createAccount}
                     mainButtonLength = {3} secondaryButtonLength = {5}/>

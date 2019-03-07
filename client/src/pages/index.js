@@ -7,6 +7,7 @@ import withRoot from '../withRoot';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import resources from '../resources/default'
+import {userLogin} from '../api'
 
 
 const styles = theme => ({
@@ -29,8 +30,10 @@ class Index extends Component {
     this.setState({currentScreen: screenName});
   }
 
-  handleLogin(){
-    
+  handleLogin(username, password){
+    userLogin({username: username, passowrd: password}, (data) => {
+
+    })
   }
 
   handleCreateAccount(){
@@ -47,13 +50,13 @@ class Index extends Component {
           <header >
             
           </header>
-          {currScreen === login && 
-            <Login handleLogin = {this.handleLogin} 
-              handleScreenChange = {this.handleScreenChange}/>}
-          {currScreen === registration && 
-            <Registration handleCreateAccount = {this.handleCreateAccount} 
-              handleScreenChange = {this.handleScreenChange} />}
-          {currScreen === chat && <Chat />}
+            {currScreen === login && 
+              <Login handleLogin = {this.handleLogin} 
+                handleScreenChange = {this.handleScreenChange}/>}
+            {currScreen === registration && 
+              <Registration handleCreateAccount = {this.handleCreateAccount} 
+                handleScreenChange = {this.handleScreenChange} />}
+            {currScreen === chat && <Chat />}
         </div>
       
       

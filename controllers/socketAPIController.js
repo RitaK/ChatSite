@@ -45,7 +45,7 @@ module.exports = function(io, dbUtils){
         //New user (or user connected)
         socket.on('new user', function(data, callback){
             //Get all user's conversations and use callback to present them to the client
-            dbUtils.getAllUserConv(data,  function(docs){
+            dbUtils.getAllUserConv(data.username,  function(docs){
                 callback(docs);
                 docs.forEach(function(doc){
                     //Decide if there's a need to join a room
@@ -54,8 +54,8 @@ module.exports = function(io, dbUtils){
                     }
                 });
             });
-            dbUtils.addUser(data);
-            socket.username = data;
+            dbUtils.addUser(data.username, data.password);
+            socket.username = data.username;
             //Adding this socket to the connectedUsers
             connectedUsers[socket.username] = socket;
         });
