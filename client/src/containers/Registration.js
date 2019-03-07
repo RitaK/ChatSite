@@ -5,6 +5,7 @@ import Info from '@material-ui/icons/Lock';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import LoginRegButtons from '../components/LoginComponents/LoginRegButtons'
+import resources from '../resources/default'
 
 const styles = theme => ({
     TextField: {
@@ -28,8 +29,8 @@ class Registration extends Component{
         }
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
         this.handleUsernameChange = this.handleUsernameChange.bind(this);
-        this.handleCreateNewAccount = this.handleCreateNewAccount.bind(this);
-        this.handleLoginInstead = this.handleLoginInstead.bind(this);
+        this.handleCreateAccount = this.handleCreateAccount.bind(this);
+        this.handleSwitchLogin = this.handleSwitchLogin.bind(this);
         this.handleComparePasswords = this.handleComparePasswords.bind(this);
     }
 
@@ -50,24 +51,37 @@ class Registration extends Component{
         this.setState({password: {text: event.target.value}});
     }
 
-    handleCreateNewAccount(){
-        //this.props.handleScreenChange(this.state.username.text, this.state.password.text);
+    handleCreateAccount(){
+        if(this.validateInput()){
+                this.props.handleCreateAccount(this.state.username.text, this.state.password.text);
+            }
+            else {
+                alert("you did something wrong");
+            }
     }
 
-    handleLoginInstead(){
-        //this.props.handleScreenChange(this.state.username.text, this.state.password.text);
+    handleSwitchLogin(){
+        this.props.handleScreenChange(resources.screens.login);
+    }
+
+    validateInput(){
+        if(!this.state.username.error && !this.state.password.error 
+            && !this.state.passwordRetyped.matchingError 
+            && this.state.password.text !== '' 
+            && this.state.username.text !== '')
+            return true;
     }
 
     handleComparePasswords(event){
         let userPasswordRetpyed = event.target.value;
         let prevTypedPassword = this.state.password.text;
         if(userPasswordRetpyed === ''){
-            this.setState({passwordRetyped:{text: event.target.value, matchingError: false}})
+            this.setState({passwordRetyped:{text: userPasswordRetpyed, matchingError: false}})
         }else if(userPasswordRetpyed === prevTypedPassword){
-            this.setState({passwordRetyped:{text: event.target.value, matchingError: false}})
+            this.setState({passwordRetyped:{text: userPasswordRetpyed, matchingError: false}})
         }
         else{
-            this.setState({passwordRetyped:{text: event.target.value, matchingError: true}});
+            this.setState({passwordRetyped:{text: userPasswordRetpyed, matchingError: true}});
         }
     }
 
@@ -75,7 +89,7 @@ class Registration extends Component{
         const {classes} = this.props;
         return(
             <LoginRegistrationContainer
-                title = {"Create an Account"}
+                title = {resources.titles.registration}
                 icon = {<Info className={classes.Info} color="primary"/>}
                 textFields = {
                     <>
@@ -95,9 +109,9 @@ class Registration extends Component{
                     </>
                 }
                 buttons = {
-                    <LoginRegButtons onMainClick = {this.handleCreateNewAccount} 
-                    onSecondaryClick = {this.handleLoginInstead}
-                    mainText = {"Create New Account"} secondaryText = {"Login"}
+                    <LoginRegButtons onMainClick = {this.handleCreateAccount} 
+                    onSecondaryClick = {this.handleSwitchLogin}
+                    mainText = {resources.buttons.createAccount} secondaryText = {resources.buttons.login}
                     mainButtonLength = {8} secondaryButtonLength = {1}/>
                 }
             />

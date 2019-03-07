@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
-import {Button, TextField, Paper, Grid} from '@material-ui/core';
-import Typography from '@material-ui/core/Typography';
+import {TextField} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Lock from '@material-ui/icons/Lock';
+import GoogleLogin from 'react-google-login';
+import LoginRegButtons from '../components/LoginComponents/LoginRegButtons';
+import LoginRegistrationContainer from './LoginRegistrationContainer';
+import resources from '../resources/default'
 
 const styles = theme => ({
     root: {
@@ -44,6 +47,7 @@ class Login extends Component{
         }
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
         this.handleUsernameChange = this.handleUsernameChange.bind(this);
+        this.handleSwitchCreateAccount = this.handleSwitchCreateAccount.bind(this);
         this.handleLogin = this.handleLogin.bind(this);
     }
 
@@ -65,45 +69,40 @@ class Login extends Component{
     }
 
     handleLogin(){
-        this.props.handleScreenChange(this.state.username.text, this.state.password.text);
+        this.props.handleLogin(this.state.username.text, this.state.password.text);
+    }
+
+    handleSwitchCreateAccount(){
+        this.props.handleScreenChange(resources.screens.registration);
     }
     
+
     render(){
         const {classes} = this.props;
         return(
-            <div>
-                <Paper className = {classes.Paper} elevation = {4}>
-                    <Grid container>
-                        <Lock className = {classes.Lock} color = "primary"/>
-                        <Typography className={classes.Typography} component="title" variant="h5" gutterBottom>
-                        Login
-                        </Typography>
+            <LoginRegistrationContainer
+                title = {resources.titles.login}
+                icon = {<Lock className = {classes.Lock} color = "primary"/>}
+                textFields = {
+                    <>
                         <TextField className = {classes.TextField} 
                         fullWidth= {true} onChange={this.handleUsernameChange}
                         label="User Name" value = {this.state.username.text}
-                        error= {this.state.username.error} />
+                        error= {this.state.username.error} autoComplete="username" 
+                        required = {true}/>
                         <TextField className = {classes.TextField} 
                         fullWidth= {true} onChange={this.handlePasswordChange}
                         label= "Password" type="Password" autoComplete="current-password"
-                        value = {this.state.password.text} />
-                        <Grid item sm= {5} >
-                            <Button className = {classes.Button} variant="text" 
-                            color="primary" fullWidth = {true} size="small"
-                            onClick = {this.handleLogin}>
-                                Create account
-                            </Button>
-                        </Grid>
-                        <Grid item sm= {3}>
-                        </Grid>
-                        <Grid item  sm= {4}>
-                            <Button className = {classes.Button} variant="contained"
-                            size="small" color="primary" fullWidth = {true}>
-                                Login
-                            </Button>
-                        </Grid>
-                    </Grid>
-                </Paper>
-            </div> 
+                        value = {this.state.password.text} required = {true}/>
+                    </>
+                }
+                buttons = {
+                    <LoginRegButtons onMainClick = {this.handleLogin} 
+                    onSecondaryClick = {this.handleSwitchCreateAccount}
+                    mainText = {resources.buttons.login} secondaryText = {resources.buttons.createAccount}
+                    mainButtonLength = {3} secondaryButtonLength = {5}/>
+                }
+            />
         );
     }
 }

@@ -18,8 +18,8 @@ class LoginRegButtons extends Component{
     }
 
     handleSecondaryClick (event){
-        if(this.props.onSecondary)
-            this.props.onSecondary();
+        if(this.props.onSecondaryClick)
+            this.props.onSecondaryClick();
     }
 
     handleMainClick (event){

@@ -6,6 +6,7 @@ import 'typeface-roboto';
 import withRoot from '../withRoot';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import resources from '../resources/default'
 
 
 const styles = theme => ({
@@ -19,30 +20,40 @@ class Index extends Component {
   constructor(props){
     super(props);
     this.state = {
-      loginScreen: false,
-      registrationScreen: true,
-      chatScreen: false
+      currentScreen: resources.screens.login
     }
     this.handleScreenChange = this.handleScreenChange.bind(this);
   }
 
-  handleScreenChange(event){
-    //this.setState({})
+  handleScreenChange(screenName){
+    this.setState({currentScreen: screenName});
+  }
+
+  handleLogin(){
+    
+  }
+
+  handleCreateAccount(){
+
   }
 
   render() {
-
-    const {classes } = this.props;
-
+    const { classes } = this.props;
+    const currScreen = this.state.currentScreen;
+    const {login, registration, chat} = resources.screens;
     return (
       
         <div className={classes.root}>
           <header >
             
           </header>
-          {this.state.loginScreen && <Login onLoggedClick = {this.handleScreenChange}/>}
-          {this.state.registrationScreen && <Registration onLoggedClick = {this.handleScreenChange} />}
-          {this.state.chatScreen && <Chat />}
+          {currScreen === login && 
+            <Login handleLogin = {this.handleLogin} 
+              handleScreenChange = {this.handleScreenChange}/>}
+          {currScreen === registration && 
+            <Registration handleCreateAccount = {this.handleCreateAccount} 
+              handleScreenChange = {this.handleScreenChange} />}
+          {currScreen === chat && <Chat />}
         </div>
       
       
