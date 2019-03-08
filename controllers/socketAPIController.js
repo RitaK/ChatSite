@@ -95,7 +95,7 @@ module.exports = function(io, dbUtils){
         socket.on('new user', function(data){
             //Generating a hash with salt from the password
             bcrypt.hash(data.password, saltRounds).then(function(hash) {
-                dbUtils.addUser(data.username, data.password, function (err){
+                dbUtils.addUser(data.username, hash, function (err){
                     if(err){
                         socket.emit('new user save failed', err);
                     } else {

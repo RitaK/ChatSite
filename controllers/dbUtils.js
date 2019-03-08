@@ -43,7 +43,7 @@ module.exports = function(app){
                     console.log("Error while getting a user's id: "+ err);
                 }
                 else {
-                    callback(user && user.username);
+                    callback(user && user.password);
                 }
             });
         },
