@@ -8,11 +8,11 @@ import LoginRegButtons from '../components/LoginComponents/LoginRegButtons'
 import resources from '../resources/default'
 
 const styles = theme => ({
-    TextField: {
+    textField: {
         'margin-top': theme.spacing.unit * 2,
         'margin-bottom': theme.spacing.unit
     },
-    Info: {
+    info: {
         width: '100%',
         'margin-bottom': theme.spacing.unit *2
     }
@@ -60,10 +60,11 @@ class Registration extends Component{
     }
 
     validateInput = () => {
-        if(!this.state.username.error && !this.state.password.error 
-            && !this.state.passwordRetyped.matchingError 
-            && this.state.password.text !== '' 
-            && this.state.username.text !== '')
+        const {username, password, passwordRetyped} = this.state;
+        if(!username.error && !password.error 
+            && !passwordRetyped.matchingError 
+            && password.text !== '' 
+            && username.text !== '')
             return true;
     }
 
@@ -81,27 +82,46 @@ class Registration extends Component{
     }
 
     render(){
-        const {classes} = this.props;
+        const {classes: {info, textField}} = this.props;
+        const {username, password, passwordRetyped} = this.state;
+
+        const createAccountTextProps = {
+            className : textField,
+            fullWidth: true,
+            required : true
+        }
+
+        const usernameTextFieldProps = {
+            onChange : this.handleUsernameChange,
+            label: "User Name",
+            value : username.text,
+            error: username.error,
+            autoComplete : "username"
+        }
+        const passTextFieldProps = {
+            onChange : this.handlePasswordChange,
+            label: "Password",
+            type: "Password",
+            value : password.text,
+            autoComplete : "current-password"
+        }
+        const passRetypeTextFieldProps = {
+            onChange : this.handleComparePasswords,
+            label: "Retype Password",
+            type: "Password",
+            value : passwordRetyped.text,
+            error : passwordRetyped.matchingError
+        }
         return(
             <LoginRegistrationContainer
                 handleSubmit = {this.handleCreateAccount} 
                 title = {resources.titles.registration}
-                icon = {<Info className={classes.Info} color="primary"/>}
+                icon = {<Info className={info} color="primary"/>}
                 textFields = {
                     <>
-                        <TextField className = {classes.TextField} 
-                        fullWidth= {true} onChange={this.handleUsernameChange}
-                        label="User Name" value = {this.state.username.text}
-                        error= {this.state.username.error} autoComplete="username" 
-                        required = {true}/>
-                        <TextField className = {classes.TextField} 
-                        fullWidth= {true} onChange={this.handlePasswordChange}
-                        label= "Password" type="Password" autoComplete="current-password"
-                        value = {this.state.password.text} required = {true}/>
-                        <TextField className = {classes.TextField} 
-                        fullWidth= {true} onChange={this.handleComparePasswords}
-                        label= "Retype Password" type="Password" 
-                        value = {this.state.passwordRetyped.text} error = {this.state.passwordRetyped.matchingError} required = {true}/>
+                        <TextField {...createAccountTextProps} {...usernameTextFieldProps} />
+                        <TextField {...createAccountTextProps} {...passTextFieldProps} />
+                        <TextField {...createAccountTextProps} {...passRetypeTextFieldProps} />
                     </>
                 }
                 buttons = {

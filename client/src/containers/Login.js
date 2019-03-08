@@ -12,9 +12,8 @@ import resources from '../resources/default'
 const styles = theme => ({
     root: {
       textAlign: 'center'
-      //paddingTop: theme.spacing.unit * 14,
     },
-    Paper: {
+    paper: {
         margin: 'auto',
         'padding-top': theme.spacing.unit * 7,
         'padding-right': theme.spacing.unit * 5,
@@ -22,17 +21,17 @@ const styles = theme => ({
         'padding-left': theme.spacing.unit * 5,
         maxWidth: 400
     },
-    TextField: {
+    textField: {
         'margin-top': theme.spacing.unit * 2,
         'margin-bottom': theme.spacing.unit
     },
-    Button: {
+    button: {
         'margin-top': theme.spacing.unit * 2
     },
-    Typography: {
+    typography: {
         width: '100%'
     },
-    Lock: {
+    lock: {
         width: '100%',
         'margin-bottom': theme.spacing.unit *2
     }
@@ -76,30 +75,42 @@ class Login extends Component{
     
 
     render(){
-        const {classes} = this.props;
+        const {classes: {textField, lock}} = this.props;
+        const {password, username} = this.state;
+        const {buttons, titles} = resources;
+
+        const loginTextFieldProps = {
+            className : textField,
+            fullWidth : true,
+            required : true
+        }
+
+        const loginButtonsProps = {
+            onSecondaryClick : this.handleSwitchCreateAccount,
+            mainText : buttons.login,
+            secondaryText : buttons.createAccount,
+            mainButtonLength : 3,
+            secondaryButtonLength : 5
+        }
+        
         return(
             <LoginRegistrationContainer
                 handleSubmit = {this.handleLogin} 
-                title = {resources.titles.login}
-                icon = {<Lock className = {classes.Lock} color = "primary"/>}
+                title = {titles.login}
+                icon = {<Lock className = {lock} color = "primary"/>}
                 textFields = {
                     <>
-                        <TextField className = {classes.TextField} 
-                        fullWidth= {true} onChange={this.handleUsernameChange}
-                        label="User Name" value = {this.state.username.text}
-                        error= {this.state.username.error} autoComplete="username" 
-                        required = {true}/>
-                        <TextField className = {classes.TextField} 
-                        fullWidth= {true} onChange={this.handlePasswordChange}
+                        <TextField {...loginTextFieldProps} onChange={this.handleUsernameChange}
+                        label="User Name" value = {username.text}
+                        error= {username.error} autoComplete="username" />
+                        <TextField {...loginTextFieldProps} onChange={this.handlePasswordChange}
                         label= "Password" type="Password" autoComplete="current-password"
-                        value = {this.state.password.text} required = {true}/>
+                        value = {password.text}/>
                     </>
                 }
                 buttons = {
-                    <LoginRegButtons 
-                    onSecondaryClick = {this.handleSwitchCreateAccount}
-                    mainText = {resources.buttons.login} secondaryText = {resources.buttons.createAccount}
-                    mainButtonLength = {3} secondaryButtonLength = {5}/>
+                    <LoginRegButtons {...loginButtonsProps}
+                    />
                 }
             />
         );

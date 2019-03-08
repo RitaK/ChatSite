@@ -2,7 +2,7 @@ import openSocket from 'socket.io-client';
 const  socket = openSocket('http://localhost:5000');
 
 
-export function userLoginSocket(userInfo ,cb){
+export function userLoginSocket(userInfo){
     //Trying to sign the user in
     socket.emit('user login', userInfo);
 
@@ -33,5 +33,4 @@ export function signInToSocketEvents(onDisconnect, onUserLogin){
 
 export function userCreateAccountSocket(userInfo){
     socket.emit('new user', userInfo);
-    
 }

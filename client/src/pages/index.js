@@ -8,6 +8,8 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import resources from '../resources/default'
 import {userLoginSocket, signInToSocketEvents, userCreateAccountSocket} from '../api'
+//import { Router, IndexRoute, Route, browserHistory } from 'react-router';
+
 
 
 const styles = theme => ({

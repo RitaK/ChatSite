@@ -33,18 +33,18 @@ class LoginRegistrationContainer extends Component{
     }
 
     render(){
-        const {classes} = this.props;
+        const {classes, icon, title, textFields, buttons} = this.props;
         return(
             <div>
                 <Paper className = {classes.Paper} elevation = {4}>
                     <Grid container>
                         <form onSubmit={this.handleSubmit} className= {classes.form}>
-                            {this.props.icon}
+                            {icon}
                             <Typography className={classes.Typography} component="title" variant="h5" gutterBottom>
-                                {this.props.title}
+                                {title}
                             </Typography>
-                            {this.props.textFields}
-                            {this.props.buttons}
+                            {textFields}
+                            {buttons}
                         </form>
                         
                     </Grid>
