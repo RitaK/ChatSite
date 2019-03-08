@@ -7,22 +7,24 @@ module.exports = function(app){
     return {
 
         //Add a new user to the DB
-        addUser: function(username, password){
+        addUser: function(username, password, cb){
             var newUser = Users({
                 username: username,
                 password: password
             });
             newUser.save(function(err) {
+
                 if(err){
                     console.log("There was a problem saving this user: "+ err);
                 }
                 else{
                     console.log('saved user ' + username);
                 }
-                
+                cb(err);
             });
         },
 
+        //Get user's ID
         getUserId: function(username, callback){
             Users.find({"username": username, function(err, docs){
                 if(err){
@@ -32,6 +34,18 @@ module.exports = function(app){
                     callback(docs);
                 }
             }});
+        },
+
+        //Get user's hashed password
+        getUserHashPass: function(username, callback){
+            Users.findOne({"username": username}, function(err, user){
+                if(err){
+                    console.log("Error while getting a user's id: "+ err);
+                }
+                else {
+                    callback(user && user.username);
+                }
+            });
         },
 
         //Delete a specific user
@@ -53,7 +67,7 @@ module.exports = function(app){
                     console.log('Error while getting all users: '+ err);
                 }
                 else{
-                    callback(docs);
+                    callback(err, docs);
                 }
             });
         },

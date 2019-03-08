@@ -1,8 +1,24 @@
+var bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 var connectedUsers = [];
 
 module.exports = function(io, dbUtils){
-    
+    var self = this;
+
+    self.addUserConnectedUserSocket = function(username, socket){
+        let user = connectedUsers.find((item) => item.username === username);
+        
+        if(user){
+            io.emit('loginNameExists', username);
+            console.log('user ' + username+ ' is already logged in')
+        } else {
+            //Adding this socket to the connectedUsers
+            connectedUsers.push({ user: username, socket: socket });
+            console.log('Connected users ' + connectedUsers);
+        }
+    }
+
     io.on('connection', function(socket){
         console.log('A user is connected');
     
@@ -10,12 +26,17 @@ module.exports = function(io, dbUtils){
         socket.on('disconnect', function(){
             var username = socket.username || "";
             if(connectedUsers.length > 0 && username != ""){
-                connectedUsers.splice(connectedUsers.indexOf(username), 1);
+                let user = connectedUsers.find((item) => item.username === username);
+                if(user){
+                connectedUsers.splice(connectedUsers.indexOf(user), 1);
+                }
+                
             }
     
             //Make user appear offline
-            io.emit('disconnected user', username);
+            socket.emit('disconnected user', username);
             console.log('User ' + username + ' disconnected');
+            console.log('Connected users ' + connectedUsers);
           });
     
         //Sending a message
@@ -37,29 +58,73 @@ module.exports = function(io, dbUtils){
             callback({message: data.message.message, from: socket.username});
             console.log('message: ' + data.message.message);
             //show the message on the receiver's screen
-            if(connectedUsers[data.to]){
-                connectedUsers[data.to].emit('new message', {message: data.message.message, from: socket.username});
+
+            var user = _.some(connectedUsers, function(item) {
+                return item.username == username && item;
+              });
+
+            if(user){
+                user.socket.emit('new message', {message: data.message.message, from: socket.username});
             }
         });
     
         //New user (or user connected)
-        socket.on('new user', function(data, callback){
-            //Get all user's conversations and use callback to present them to the client
-            dbUtils.getAllUserConv(data.username,  function(docs){
-                callback(docs);
-                docs.forEach(function(doc){
-                    //Decide if there's a need to join a room
-                    if(doc.usernamesInConv.length > 2){
-                        //socket.join('room 237');
+        socket.on('user login', function(data){
+
+            //Get the user's password from the DB, if he exists
+            dbUtils.getUserHashPass(data.username, function(hashedPass){
+                
+                if(hashedPass){
+                    bcrypt.compare(data.password, hashedPass).then(function(res) {
+                        if(res){
+                            addUserConnectedUserSocket(data.username, socket);
+                            socket.emit('user login succeeded');     
+                        } else {
+                            socket.emit('user login failed', 'Wrong password');
+                        }
+                    });
+                } else {
+                    socket.emit('user login failed', 'User doesnt exist');
+                }
+            });
+            
+        });
+    
+
+        //New user
+        socket.on('new user', function(data){
+            //Generating a hash with salt from the password
+            bcrypt.hash(data.password, saltRounds).then(function(hash) {
+                dbUtils.addUser(data.username, data.password, function (err){
+                    if(err){
+                        socket.emit('new user save failed', err);
+                    } else {
+                        socket.emit('new user save succeeded');
+                        socket.username = data.username;
+                        addUserConnectedUserSocket(data.username, socket);
                     }
                 });
             });
-            dbUtils.addUser(data.username, data.password);
-            socket.username = data.username;
-            //Adding this socket to the connectedUsers
-            connectedUsers[socket.username] = socket;
         });
-    
+
+        //Get all user's conversations (when logged in)
+        socket.on('get user conversations', function(username){
+            //Get all user's conversations and use callback to present them to the client
+            dbUtils.getAllUserConv(username, function(err, docs){
+                if(err){
+
+                } else {
+                    docs.forEach(function(doc){
+                        //Decide if there's a need to join a room
+                        if(doc.usernamesInConv.length > 2){
+                            //socket.join('room 237');
+                        }
+                    });
+                    socket.emit('got user conversations', docs);
+                }
+                
+            });
+        })
         //The current user selected a user to talk to. 
         //Here we load all the messages from that conversation
         socket.on('selected user', function(data, callback){

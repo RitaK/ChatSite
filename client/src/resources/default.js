@@ -13,5 +13,9 @@ module.exports = {
     buttons: {
         login: "Login",
         createAccount: "Create Account"
+    },
+    userStates: {
+        loggedIn: "loggedIn",
+        notLoggedIn: "notLoggedIn"
     }
   } 

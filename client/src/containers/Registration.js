@@ -27,14 +27,9 @@ class Registration extends Component{
             passwordRetyped: {text: '', matchingError: false}
     
         }
-        this.handlePasswordChange = this.handlePasswordChange.bind(this);
-        this.handleUsernameChange = this.handleUsernameChange.bind(this);
-        this.handleCreateAccount = this.handleCreateAccount.bind(this);
-        this.handleSwitchLogin = this.handleSwitchLogin.bind(this);
-        this.handleComparePasswords = this.handleComparePasswords.bind(this);
     }
 
-    handleUsernameChange(event){
+    handleUsernameChange = (event) => {
         //Check for white spaces
         let regSpace = /\s/g;
         let userNameValue = event.target.value;
@@ -47,11 +42,11 @@ class Registration extends Component{
         
     }
 
-    handlePasswordChange(event){
+    handlePasswordChange = (event) => {
         this.setState({password: {text: event.target.value}});
     }
 
-    handleCreateAccount(){
+    handleCreateAccount = () => {
         if(this.validateInput()){
                 this.props.handleCreateAccount(this.state.username.text, this.state.password.text);
             }
@@ -60,11 +55,11 @@ class Registration extends Component{
             }
     }
 
-    handleSwitchLogin(){
+    handleSwitchLogin = () => {
         this.props.handleScreenChange(resources.screens.login);
     }
 
-    validateInput(){
+    validateInput = () => {
         if(!this.state.username.error && !this.state.password.error 
             && !this.state.passwordRetyped.matchingError 
             && this.state.password.text !== '' 
@@ -72,7 +67,7 @@ class Registration extends Component{
             return true;
     }
 
-    handleComparePasswords(event){
+    handleComparePasswords = (event) =>{
         let userPasswordRetpyed = event.target.value;
         let prevTypedPassword = this.state.password.text;
         if(userPasswordRetpyed === ''){

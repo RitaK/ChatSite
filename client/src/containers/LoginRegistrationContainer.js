@@ -27,12 +27,7 @@ const styles = theme => ({
 
 class LoginRegistrationContainer extends Component{
 
-    constructor(props){
-        super(props);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    handleSubmit(event){
+    handleSubmit = (event) => {
         this.props.handleSubmit();
         event.preventDefault();
     }

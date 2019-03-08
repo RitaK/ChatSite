@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/RitaK/ChatSite#readme",
   "dependencies": {
+    "bcrypt": "^3.0.4",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "http": "0.0.0",

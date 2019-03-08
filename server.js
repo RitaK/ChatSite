@@ -8,6 +8,7 @@ var dbUtils = require('./controllers/dbUtils');
 var setupController = require('./controllers/setupController');
 var socketAPIController = require('./controllers/socketAPIController');
 
+
 //Sockets of all connected users at this moment
 var connectedUsers = [];
 

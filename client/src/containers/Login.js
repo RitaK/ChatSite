@@ -46,13 +46,10 @@ class Login extends Component{
             password: {text: '', error: false}
 
         }
-        this.handlePasswordChange = this.handlePasswordChange.bind(this);
-        this.handleUsernameChange = this.handleUsernameChange.bind(this);
-        this.handleSwitchCreateAccount = this.handleSwitchCreateAccount.bind(this);
-        this.handleLogin = this.handleLogin.bind(this);
+        
     }
 
-    handleUsernameChange(event){
+    handleUsernameChange = (event) => {
         //Check for white spaces
         let regSpace = /\s/g;
         let userNameValue = event.target.value;
@@ -65,15 +62,15 @@ class Login extends Component{
         
     }
 
-    handlePasswordChange(event){
+    handlePasswordChange = (event) => {
         this.setState({password: {text: event.target.value}});
     }
 
-    handleLogin(){
+    handleLogin = () => {
         this.props.handleLogin(this.state.username.text, this.state.password.text);
     }
 
-    handleSwitchCreateAccount(){
+    handleSwitchCreateAccount = () =>{
         this.props.handleScreenChange(resources.screens.registration);
     }
     

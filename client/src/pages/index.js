@@ -7,7 +7,7 @@ import withRoot from '../withRoot';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import resources from '../resources/default'
-import {userLogin} from '../api'
+import {userLoginSocket, signInToSocketEvents, userCreateAccountSocket} from '../api'
 
 
 const styles = theme => ({
@@ -21,23 +21,42 @@ class Index extends Component {
   constructor(props){
     super(props);
     this.state = {
-      currentScreen: resources.screens.login
+      currentScreen: resources.screens.login,
+      userState: resources.userStates.notLoggedIn
     }
-    this.handleScreenChange = this.handleScreenChange.bind(this);
   }
 
-  handleScreenChange(screenName){
+  handleScreenChange = (screenName) =>{
     this.setState({currentScreen: screenName});
   }
 
-  handleLogin(username, password){
-    userLogin({username: username, passowrd: password}, (data) => {
-
-    })
+  handleLogin = (username, password) => {
+    userLoginSocket({username: username, password: password})
   }
 
-  handleCreateAccount(){
+  handleCreateAccount = (username, password) => {
+    userCreateAccountSocket({username: username, password: password});
+  }
 
+  componentDidMount(){
+    signInToSocketEvents(this.onDisconnect, this.onUserLogin);
+  }
+
+  //When user disconnects
+  onDisconnect = () => {
+    this.setState({currentScreen: resources.screens.login, 
+      userState: resources.userStates.notLoggedIn});
+  }
+
+  onUserLogin = (err) => {
+      if(err){
+        console.log(err);
+      } else {
+        //Sing in succeeded - switch to chat screen
+        //And - change state to logged in
+        this.setState({currentScreen: resources.screens.chat, 
+          userState: resources.userStates.loggedIn});
+      }
   }
 
   render() {
@@ -56,7 +75,8 @@ class Index extends Component {
             {currScreen === registration && 
               <Registration handleCreateAccount = {this.handleCreateAccount} 
                 handleScreenChange = {this.handleScreenChange} />}
-            {currScreen === chat && <Chat />}
+            {currScreen === chat && 
+              <Chat />}
         </div>
       
       
