@@ -31,7 +31,12 @@ class SidePanel extends Component{
         });
 
         getAllUserConversations(this.props.username);
-    }
+    };
+
+    handleListItemClick = (event, convID) => {
+        this.setState({ selectedConvId: convID });
+    };
+
     render(){
         const {conversations} = this.state;
         const {classes} = this.props;
@@ -43,9 +48,12 @@ class SidePanel extends Component{
                     <ActionsAppBar>
 
                     </ActionsAppBar>
-                    <List>
+                    <List component="nav">
                         {conversations.map((conv) => 
-                            <ListItem key = {conv._id}>
+                            <ListItem button 
+                                selected={this.state.selectedConvId === conv._id}
+                                onClick={event => this.handleListItemClick(event, conv._id)}
+                                key = {conv._id}>
                                 <ListItemText
                                     primary={conv.groupName}
                                     secondary = {conv.usernamesInConv}

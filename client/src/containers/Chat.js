@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ChatHeader from '../components/ChatComponents/header/ChatAppBar';
 import {Grid} from '@material-ui/core';
 import SidePanel from '../components/ChatComponents/SidePanel'
 import { withStyles } from '@material-ui/core/styles';
