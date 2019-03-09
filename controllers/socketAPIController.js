@@ -80,12 +80,14 @@ module.exports = function(io, dbUtils){
                             addUserConnectedUserSocket(data.username, socket);    
                         } else{
                             this.err = 'Wrong password';
-                        }                     
+                        }
+                        socket.emit('user login response', {err: this.err, username: data.username});                       
                     });
                 } else {
                     this.err = 'User doesnt exist';
+                    socket.emit('user login response', {err: this.err, username: data.username});  
                 }
-                socket.emit('user login response', {err: this.err, username: data.username});  
+                
             });
             
         });
