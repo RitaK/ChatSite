@@ -34,23 +34,26 @@
   }
 }
 
-.fade-appear {
+ .fade-enter,
+ .fade-appear {
   opacity: 0;
-  transform: scale(1.1);
+
 }
 
-.fade-appear .fade-appear-active {
+.fade-appear.fade-appear-active {
   opacity: 1;
-  transform: scale(1);
-  transition: opacity 600ms ease-in;
+  transition: opacity 500ms ease-in;
 }
 
-.fade-enter {
-  opacity: 0.01;
-  transform: scale(0.9) translateY(50%);
-}
-.fade-enter-active {
+.fade-enter.fade-enter-active {
   opacity: 1;
-  transform: scale(1) translateY(0%);
-  transition: all 300ms ease-out;
+  transition: opacity 500ms ease-in;
+}
+
+.fade-exit {
+  opacity: 1;
+}
+
+.fade-exit-active {
+  opacity: 0;
 }

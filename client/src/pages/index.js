@@ -6,11 +6,12 @@ import 'typeface-roboto';
 import withRoot from '../withRoot';
 import resources from '../resources/default'
 import {userLoginSocket, signInToSocketEvents, userCreateAccountSocket} from '../api'
-import { /* Router, IndexRoute, Route, */  } from 'react-router';
+//import { /* Router, IndexRoute, Route, */  } from 'react-router';
 import { Route, Switch, Redirect} from 'react-router-dom';
-//import { CSSTransitionGroup } from 'react-transition-group';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import '../App.css';
 import {withRouter} from 'react-router-dom'
+import '../App.css'
 
 
 class Index extends Component {
@@ -68,19 +69,38 @@ class Index extends Component {
       updateScreenState : this.updateScreenState
     }
     
-    return (
-      
-        <Switch >
-          <Redirect exact from='/' to={`/${login}`}/>
-          <Route exact path={`/${login}`} render = {() => (
-            <Login {...LoginProps} />
-          )}/>
-          <Route path={`/${registration}`} render ={() => (
-            <Registration {...RegistrationProps}  />
-          )} />
-          <Route path={`/${chat}`} component={Chat} />
-        </Switch>
-      
+    const screensTransProps = {
+      component : 'div',
+      classNames: 'fade',
+      appear: true,
+      timeout: 700,
+      transitionEnter: 'fade',
+      transitionLeave: 'fade',
+      transitionName: 'fade',
+      transitionEnterTimeout: 700,
+      transitionLeaveTimeout: 700
+    }
+    return (    
+      <Route render = {({location}) => (
+          <TransitionGroup>
+            <CSSTransition
+                  key={location.key}
+                  classNames="fade"
+                  timeout={1500}
+                  appear = {true}>
+              <Switch key={ location.key } location={ location }>
+                <Redirect exact from='/' to={`/${login}`}/>
+                <Route exact path={`/${login}`} render = {() => (
+                  <Login {...LoginProps} />
+                )}/>
+                <Route path={`/${registration}`} render ={() => (
+                  <Registration {...RegistrationProps}  />
+                )} />
+                <Route path={`/${chat}`} component={Chat} />
+              </Switch>
+            </CSSTransition>
+          </TransitionGroup>
+        )}/>
     );
   }
 }
