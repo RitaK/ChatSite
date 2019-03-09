@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Grid} from '@material-ui/core';
+import ChatAppBar from './ChatAppBar';
 
 
 class ActionsAppBar extends Component{
@@ -7,7 +7,8 @@ class ActionsAppBar extends Component{
 
     render(){
         return(
-            <Grid item/>
+            <ChatAppBar>
+            </ChatAppBar>
         );
     }
 }

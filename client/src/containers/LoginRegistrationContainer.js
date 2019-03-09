@@ -8,6 +8,7 @@ const styles = theme => ({
     root: {
       textAlign: 'center',
       paddingTop: theme.spacing.unit * 20,
+      height: '100%'
     },
     Paper: {
         margin: 'auto',

@@ -57,3 +57,7 @@
 .fade-exit-active {
   opacity: 0;
 }
+
+html, body, #root, #root>div:first-child{
+  height: 100%
+}

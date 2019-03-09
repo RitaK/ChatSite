@@ -1,9 +1,16 @@
 import React, { Component } from 'react';
-import ChatHeader from '../components/ChatComponents/header/ChatHeader';
+import ChatHeader from '../components/ChatComponents/header/ChatAppBar';
 import {Grid} from '@material-ui/core';
-import ChatPanel from '../components/ChatComponents/ChatPanel'
 import SidePanel from '../components/ChatComponents/SidePanel'
+import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 
+var styles = theme =>({
+    root: {
+        height: '100%'
+    },
+
+});
 
 
 class Chat extends Component{
@@ -11,9 +18,11 @@ class Chat extends Component{
     
     render(){
         const {handleError, username} = this.props;
+        const {classes} = this.props;
+
         return(
-            <Grid container>
-{/*                 <ChatHeader/>
+            <Grid container className = {classes.root}>
+{/*             
                 <ChatPanel>
                 </ChatPanel> */}
                 <SidePanel handleError = {handleError} username = {username}>
@@ -25,4 +34,9 @@ class Chat extends Component{
     }
 }
 
-export default Chat;
+Chat.propTypes = {
+    classes: PropTypes.object.isRequired
+}
+
+
+export default withStyles(styles)(Chat);

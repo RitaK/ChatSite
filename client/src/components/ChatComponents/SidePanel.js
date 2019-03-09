@@ -1,6 +1,16 @@
 import React, { Component } from 'react';
 import {Grid, List, ListItem, ListItemText} from '@material-ui/core';
 import {getAllUserConversations, registerToMessageEvents} from '../../api'
+import ActionsAppBar from './header/ActionsAppBar'
+import { withStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
+
+var styles = theme =>({
+    root: {
+        width: '40%'
+    },
+
+});
 
 class SidePanel extends Component{
 
@@ -24,23 +34,33 @@ class SidePanel extends Component{
     }
     render(){
         const {conversations} = this.state;
-        console.log(conversations);
+        const {classes} = this.props;
+
+        
         return(
-            <Grid item>
-                <List>
-                    {conversations.map((conv) => 
-                        <ListItem key = {conv._id}>
-                            <ListItemText
-                                primary={conv.groupName}
-                                secondary = {conv.usernamesInConv}
-                                />
-                        </ListItem>)}
-                </List>
-            
-            </Grid>
+            <>
+                <Grid item className = {classes.root}>
+                    <ActionsAppBar>
+
+                    </ActionsAppBar>
+                    <List>
+                        {conversations.map((conv) => 
+                            <ListItem key = {conv._id}>
+                                <ListItemText
+                                    primary={conv.groupName}
+                                    secondary = {conv.usernamesInConv}
+                                    />
+                            </ListItem>)}
+                    </List>
+                </Grid>
+            </>
         );
     }
 }
 
+SidePanel.propTypes = {
+    classes: PropTypes.object.isRequired
+}
 
-export default SidePanel;
+
+export default withStyles(styles)(SidePanel);
