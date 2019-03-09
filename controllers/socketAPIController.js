@@ -73,19 +73,19 @@ module.exports = function(io, dbUtils){
 
             //Get the user's password from the DB, if he exists
             dbUtils.getUserHashPass(data.username, function(hashedPass){
-                
+                this.err = '';
                 if(hashedPass){
-                    bcrypt.compare(data.password, hashedPass).then(function(res) {
+                    bcrypt.compare(data.password, hashedPass).then((res) => {
                         if(res){
-                            addUserConnectedUserSocket(data.username, socket);
-                            socket.emit('user login succeeded', data.username);     
-                        } else {
-                            socket.emit('user login failed', 'Wrong password');
-                        }
+                            addUserConnectedUserSocket(data.username, socket);    
+                        } else{
+                            this.err = 'Wrong password';
+                        }                     
                     });
                 } else {
-                    socket.emit('user login failed', 'User doesnt exist');
+                    this.err = 'User doesnt exist';
                 }
+                socket.emit('user login response', {err: this.err, username: data.username});  
             });
             
         });
@@ -96,13 +96,11 @@ module.exports = function(io, dbUtils){
             //Generating a hash with salt from the password
             bcrypt.hash(data.password, saltRounds).then(function(hash) {
                 dbUtils.addUser(data.username, hash, function (err){
-                    if(err){
-                        socket.emit('new user save failed', err);
-                    } else {
-                        socket.emit('new user save succeeded');
+                    if(!err){
                         socket.username = data.username;
                         addUserConnectedUserSocket(data.username, socket);
                     }
+                    socket.emit('new user save response', {err: err, username: data.username});
                 });
             });
         });

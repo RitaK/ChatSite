@@ -10,7 +10,7 @@ class SidePanel extends Component{
             conversations: []
         }
     }
-    componentDidMount(){
+    componentWillMount(){
         //On getting the conversations
         registerToMessageEvents((err, conversations) => {
             if(err){
@@ -29,7 +29,7 @@ class SidePanel extends Component{
             <Grid item>
                 <List>
                     {conversations.map((conv) => 
-                        <ListItem>
+                        <ListItem key = {conv._id}>
                             <ListItemText
                                 primary={conv.groupName}
                                 secondary = {conv.usernamesInConv}

@@ -13,14 +13,22 @@ module.exports = function(app){
                 password: password
             });
             newUser.save(function(err) {
+                let errMsg = '';
 
-                if(err){
-                    console.log("There was a problem saving this user: "+ err);
-                }
-                else{
+                if(!err){
                     console.log('saved user ' + username);
                 }
-                cb(err);
+
+                if(err){
+                    if(err.name === 'MongoError' && err.code === 11000){
+                        errMsg = 'This user name already exists in the system';
+                        console.log(errMsg);
+                    }else{
+                        errMsg = err.errMsg;
+                    }
+                }
+                
+                cb(!!errMsg && errMsg);
             });
         },
 

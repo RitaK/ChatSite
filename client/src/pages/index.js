@@ -5,7 +5,7 @@ import Registration from '../containers/Registration';
 import 'typeface-roboto';
 import withRoot from '../withRoot';
 import resources from '../resources/default'
-import {userLoginSocket, signInToSocketEvents, userCreateAccountSocket} from '../api'
+import {emitUserLogin, registerToLoginLogoutEvents, emitUserCreateAccount} from '../api'
 //import { /* Router, IndexRoute, Route, */  } from 'react-router';
 import { Route, Switch, Redirect} from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -31,28 +31,26 @@ class Index extends Component {
   }
 
   handleLogin = (username, password) => {
-    userLoginSocket({username: username, password: password})
+    emitUserLogin({username: username, password: password})
   }
 
   handleCreateAccount = (username, password) => {
-    userCreateAccountSocket({username: username, password: password});
+    emitUserCreateAccount({username: username, password: password});
   }
 
   componentDidMount(){
-    signInToSocketEvents(this.onDisconnect, this.onUserLogin);
+    registerToLoginLogoutEvents(this.onDisconnect, this.onUserLogin);
   }
 
   //When user disconnects
   onDisconnect = () => {
     this.setState({ userState: resources.userStates.notLoggedIn});
+    this.props.history.push(`/${resources.screens.login}`);
   }
 
   onUserLogin = (err, username) => {
       if(err){
-        this.props.enqueueSnackbar(err, { 
-          variant: 'error' , 
-          autoHideDuration: 2000, 
-          anchorOrigin: { vertical: 'bottom', horizontal: 'left',}});
+        this.handleError(err);
       } else {
         //Sing in succeeded - switch to chat screen
         //And - change state to logged in

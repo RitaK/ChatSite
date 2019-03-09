@@ -26,7 +26,6 @@ class Registration extends Component{
             username: {text: '', error: false},
             password: {text: '', error: false},
             passwordRetyped: {text: '', matchingError: false}
-    
         }
     }
 
