@@ -44,9 +44,7 @@ class Login extends Component{
         this.state = {
             username: {text: '', error: false},
             password: {text: '', error: false}
-
         }
-        
     }
 
     handleUsernameChange = (event) => {

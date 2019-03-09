@@ -12,6 +12,8 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import '../App.css';
 import {withRouter} from 'react-router-dom'
 import '../App.css'
+import {withSnackbar } from 'notistack';
+import PropTypes from 'prop-types';
 
 
 class Index extends Component {
@@ -47,6 +49,7 @@ class Index extends Component {
   onUserLogin = (err) => {
       if(err){
         console.log(err);
+        this.props.enqueueSnackbar(err, { variant: 'error' });
       } else {
         //Sing in succeeded - switch to chat screen
         //And - change state to logged in
@@ -70,24 +73,14 @@ class Index extends Component {
     }
     
     const screensTransProps = {
-      component : 'div',
-      classNames: 'fade',
-      appear: true,
-      timeout: 700,
-      transitionEnter: 'fade',
-      transitionLeave: 'fade',
-      transitionName: 'fade',
-      transitionEnterTimeout: 700,
-      transitionLeaveTimeout: 700
+      classNames : "fade",
+      timeout: 1500,
+      appear : true
     }
     return (    
       <Route render = {({location}) => (
           <TransitionGroup>
-            <CSSTransition
-                  key={location.key}
-                  classNames="fade"
-                  timeout={1500}
-                  appear = {true}>
+            <CSSTransition key={location.key} {...screensTransProps}>
               <Switch key={ location.key } location={ location }>
                 <Redirect exact from='/' to={`/${login}`}/>
                 <Route exact path={`/${login}`} render = {() => (
@@ -105,5 +98,8 @@ class Index extends Component {
   }
 }
 
+Index.propTypes = {
+  enqueueSnackbar: PropTypes.func.isRequired,
+};
 
-export default withRouter(withRoot(Index));
+export default withSnackbar(withRouter(withRoot(Index)));
