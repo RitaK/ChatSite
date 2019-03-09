@@ -6,8 +6,8 @@ import PropTypes from 'prop-types';
 
 const styles = theme => ({
     root: {
-      textAlign: 'center'
-      //paddingTop: theme.spacing.unit * 14,
+      textAlign: 'center',
+      paddingTop: theme.spacing.unit * 20,
     },
     Paper: {
         margin: 'auto',
@@ -35,7 +35,7 @@ class LoginRegistrationContainer extends Component{
     render(){
         const {classes, icon, title, textFields, buttons} = this.props;
         return(
-            <div>
+            <div className = {classes.root}>
                 <Paper className = {classes.Paper} elevation = {4}>
                     <Grid container>
                         <form onSubmit={this.handleSubmit} className= {classes.form}>

@@ -4,20 +4,14 @@ import Login from '../containers/Login';
 import Registration from '../containers/Registration';
 import 'typeface-roboto';
 import withRoot from '../withRoot';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 import resources from '../resources/default'
 import {userLoginSocket, signInToSocketEvents, userCreateAccountSocket} from '../api'
-//import { Router, IndexRoute, Route, browserHistory } from 'react-router';
+import { /* Router, IndexRoute, Route, */  } from 'react-router';
+import { Route, Switch, Redirect} from 'react-router-dom';
+//import { CSSTransitionGroup } from 'react-transition-group';
+import '../App.css';
+import {withRouter} from 'react-router-dom'
 
-
-
-const styles = theme => ({
-  root: {
-    textAlign: 'center',
-    paddingTop: theme.spacing.unit * 20,
-  },
-});
 
 class Index extends Component {
   constructor(props){
@@ -28,7 +22,7 @@ class Index extends Component {
     }
   }
 
-  handleScreenChange = (screenName) =>{
+  updateScreenState = (screenName) =>{
     this.setState({currentScreen: screenName});
   }
 
@@ -46,8 +40,7 @@ class Index extends Component {
 
   //When user disconnects
   onDisconnect = () => {
-    this.setState({currentScreen: resources.screens.login, 
-      userState: resources.userStates.notLoggedIn});
+    this.setState({ userState: resources.userStates.notLoggedIn});
   }
 
   onUserLogin = (err) => {
@@ -58,36 +51,39 @@ class Index extends Component {
         //And - change state to logged in
         this.setState({currentScreen: resources.screens.chat, 
           userState: resources.userStates.loggedIn});
+        this.props.history.push(`/${resources.screens.chat}`);
       }
   }
 
   render() {
-    const { classes } = this.props;
-    const currScreen = this.state.currentScreen;
+    //const currScreen = this.state.currentScreen;
     const {login, registration, chat} = resources.screens;
+    const LoginProps = {
+      handleLogin : this.handleLogin,
+      updateScreenState : this.updateScreenState
+    }
+
+    const RegistrationProps = {
+      handleCreateAccount : this.handleCreateAccount,
+      updateScreenState : this.updateScreenState
+    }
+    
     return (
       
-        <div className={classes.root}>
-          <header >
-            
-          </header>
-            {currScreen === login && 
-              <Login handleLogin = {this.handleLogin} 
-                handleScreenChange = {this.handleScreenChange}/>}
-            {currScreen === registration && 
-              <Registration handleCreateAccount = {this.handleCreateAccount} 
-                handleScreenChange = {this.handleScreenChange} />}
-            {currScreen === chat && 
-              <Chat />}
-        </div>
-      
+        <Switch >
+          <Redirect exact from='/' to={`/${login}`}/>
+          <Route exact path={`/${login}`} render = {() => (
+            <Login {...LoginProps} />
+          )}/>
+          <Route path={`/${registration}`} render ={() => (
+            <Registration {...RegistrationProps}  />
+          )} />
+          <Route path={`/${chat}`} component={Chat} />
+        </Switch>
       
     );
   }
 }
 
-Index.propTypes = {
-  classes : PropTypes.object.isRequired,
-};
 
-export default withRoot(withStyles(styles)(Index));
+export default withRouter(withRoot(Index));

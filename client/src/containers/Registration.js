@@ -6,6 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import LoginRegButtons from '../components/LoginComponents/LoginRegButtons'
 import resources from '../resources/default'
+import {withRouter} from 'react-router-dom'
 
 const styles = theme => ({
     textField: {
@@ -56,7 +57,8 @@ class Registration extends Component{
     }
 
     handleSwitchLogin = () => {
-        this.props.handleScreenChange(resources.screens.login);
+        this.props.history.push(`/${resources.screens.login}`);
+        this.props.updateScreenState(resources.screens.login);
     }
 
     validateInput = () => {
@@ -82,11 +84,11 @@ class Registration extends Component{
     }
 
     render(){
-        const {classes: {info, textField}} = this.props;
+        const {classes: {info: infoClass, textField: textFieldClass}} = this.props;
         const {username, password, passwordRetyped} = this.state;
 
         const createAccountTextProps = {
-            className : textField,
+            className : textFieldClass,
             fullWidth: true,
             required : true
         }
@@ -116,7 +118,7 @@ class Registration extends Component{
             <LoginRegistrationContainer
                 handleSubmit = {this.handleCreateAccount} 
                 title = {resources.titles.registration}
-                icon = {<Info className={info} color="primary"/>}
+                icon = {<Info className={infoClass} color="primary"/>}
                 textFields = {
                     <>
                         <TextField {...createAccountTextProps} {...usernameTextFieldProps} />
@@ -139,4 +141,4 @@ Registration.propTypes = {
     classes: PropTypes.object.isRequired
 }
 
-export default withStyles(styles)(Registration);
+export default withRouter(withStyles(styles)(Registration));

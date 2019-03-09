@@ -7,6 +7,7 @@ import Lock from '@material-ui/icons/Lock';
 import LoginRegButtons from '../components/LoginComponents/LoginRegButtons';
 import LoginRegistrationContainer from './LoginRegistrationContainer';
 import resources from '../resources/default'
+import {withRouter} from 'react-router-dom'
 
 
 const styles = theme => ({
@@ -70,14 +71,15 @@ class Login extends Component{
     }
 
     handleSwitchCreateAccount = () =>{
-        this.props.handleScreenChange(resources.screens.registration);
+        this.props.history.push(`/${resources.screens.registration}`);
+        this.props.updateScreenState(resources.screens.registration);
     }
     
 
     render(){
         const {classes: {textField, lock}} = this.props;
         const {password, username} = this.state;
-        const {buttons, titles} = resources;
+        const {buttons:buttonsText, titles: titlesText} = resources;
 
         const loginTextFieldProps = {
             className : textField,
@@ -87,8 +89,8 @@ class Login extends Component{
 
         const loginButtonsProps = {
             onSecondaryClick : this.handleSwitchCreateAccount,
-            mainText : buttons.login,
-            secondaryText : buttons.createAccount,
+            mainText : buttonsText.login,
+            secondaryText : buttonsText.createAccount,
             mainButtonLength : 3,
             secondaryButtonLength : 5
         }
@@ -96,7 +98,7 @@ class Login extends Component{
         return(
             <LoginRegistrationContainer
                 handleSubmit = {this.handleLogin} 
-                title = {titles.login}
+                title = {titlesText.login}
                 icon = {<Lock className = {lock} color = "primary"/>}
                 textFields = {
                     <>
@@ -121,4 +123,4 @@ Login.propTypes = {
     classes: PropTypes.object.isRequired
 }
 
-export default withStyles(styles)(Login);
+export default withRouter(withStyles(styles)(Login));
