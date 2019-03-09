@@ -78,7 +78,7 @@ module.exports = function(io, dbUtils){
                     bcrypt.compare(data.password, hashedPass).then(function(res) {
                         if(res){
                             addUserConnectedUserSocket(data.username, socket);
-                            socket.emit('user login succeeded');     
+                            socket.emit('user login succeeded', data.username);     
                         } else {
                             socket.emit('user login failed', 'Wrong password');
                         }
@@ -109,7 +109,7 @@ module.exports = function(io, dbUtils){
 
         //Get all user's conversations (when logged in)
         socket.on('get user conversations', function(username){
-            //Get all user's conversations and use callback to present them to the client
+            //Get all user's conversations and send them to the client
             dbUtils.getAllUserConv(username, function(err, docs){
                 if(err){
 
@@ -120,9 +120,8 @@ module.exports = function(io, dbUtils){
                             //socket.join('room 237');
                         }
                     });
-                    socket.emit('got user conversations', docs);
                 }
-                
+                socket.emit('got user conversations', {err: err, conversations: docs});
             });
         })
         //The current user selected a user to talk to. 

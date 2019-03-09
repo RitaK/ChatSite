@@ -1,4 +1,6 @@
 import openSocket from 'socket.io-client';
+/* import { resolve } from 'url';
+import { rejects } from 'assert'; */
 const  socket = openSocket('http://localhost:5000');
 
 
@@ -16,8 +18,8 @@ export function signInToSocketEvents(onDisconnect, onUserLogin){
     });
 
     //If user signed in successfully
-    socket.on('user login succeeded', () => {
-        onUserLogin(null);
+    socket.on('user login succeeded', (username) => {
+        onUserLogin(null, username);
     });
 
     //If the user couldn't sign in successfuly
@@ -34,3 +36,14 @@ export function signInToSocketEvents(onDisconnect, onUserLogin){
 export function userCreateAccountSocket(userInfo){
     socket.emit('new user', userInfo);
 }
+
+export function getAllUserConversations(username){
+    socket.emit('get user conversations', username);
+}
+
+export function registerToMessageEvents(setConversations){
+    
+        socket.on('got user conversations', ({err, conversations}) => {
+            setConversations(err, conversations);
+        });
+    }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AppBar} from '@material-ui/core';
+import { AppBar } from '@material-ui/core';
 
 
 class ChatRoomAppBar extends Component{

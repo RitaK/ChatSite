@@ -8,11 +8,11 @@ import {SnackbarProvider} from 'notistack'
 
 ReactDOM.render(
 <BrowserRouter> 
-<SnackbarProvider maxSnack = {3}>
-    <Index />
-</SnackbarProvider>
-    
-    </BrowserRouter>, document.getElementById('root'));
+    <SnackbarProvider 
+        maxSnack = {3}>
+        <Index />
+    </SnackbarProvider>
+</BrowserRouter>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

@@ -21,7 +21,8 @@ class Index extends Component {
     super(props);
     this.state = {
       currentScreen: resources.screens.login,
-      userState: resources.userStates.notLoggedIn
+      userState: resources.userStates.notLoggedIn,
+      username: ''
     }
   }
 
@@ -46,22 +47,33 @@ class Index extends Component {
     this.setState({ userState: resources.userStates.notLoggedIn});
   }
 
-  onUserLogin = (err) => {
+  onUserLogin = (err, username) => {
       if(err){
-        console.log(err);
-        this.props.enqueueSnackbar(err, { variant: 'error' });
+        this.props.enqueueSnackbar(err, { 
+          variant: 'error' , 
+          autoHideDuration: 2000, 
+          anchorOrigin: { vertical: 'bottom', horizontal: 'left',}});
       } else {
         //Sing in succeeded - switch to chat screen
         //And - change state to logged in
         this.setState({currentScreen: resources.screens.chat, 
-          userState: resources.userStates.loggedIn});
+          userState: resources.userStates.loggedIn,
+            username: username});
         this.props.history.push(`/${resources.screens.chat}`);
       }
+  }
+
+  handleError = (err) => {
+    this.props.enqueueSnackbar(err, { 
+      variant: 'error' , 
+      autoHideDuration: 2000, 
+      anchorOrigin: { vertical: 'bottom', horizontal: 'left',}});
   }
 
   render() {
     //const currScreen = this.state.currentScreen;
     const {login, registration, chat} = resources.screens;
+
     const LoginProps = {
       handleLogin : this.handleLogin,
       updateScreenState : this.updateScreenState
@@ -77,6 +89,12 @@ class Index extends Component {
       timeout: 1500,
       appear : true
     }
+
+    const ChatProps = {
+      handleError : this.handleError,
+      username: this.state.username
+    }
+
     return (    
       <Route render = {({location}) => (
           <TransitionGroup>
@@ -89,7 +107,10 @@ class Index extends Component {
                 <Route path={`/${registration}`} render ={() => (
                   <Registration {...RegistrationProps}  />
                 )} />
-                <Route path={`/${chat}`} component={Chat} />
+                {this.state.userState === resources.userStates.loggedIn && 
+                  <Route path={`/${chat}`} render = {() => (
+                    <Chat {...ChatProps}/>
+                  )} />}
               </Switch>
             </CSSTransition>
           </TransitionGroup>
