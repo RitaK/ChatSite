@@ -1,23 +1,18 @@
 import React, { Component } from 'react';
-import { AppBar } from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
+import ChatAppBar from './ChatAppBar'
+import MenuIcon from '@material-ui/icons/Menu';
 
 
 class ChatRoomAppBar extends Component{
 
 
     render(){
+        const {currParticipants} = this.props;
         return(
-            <ChatAppBar text = "Conversations" 
+            <ChatAppBar text = {currParticipants.toString()}
             buttons = {<>
-                <IconButton aria-label="Search" color="inherit">
-                    <Search color="secondary"/>
-                </IconButton>
-                <IconButton aria-label="Search" color="inherit">
-                    <AddCircle color="secondary"/>
-                </IconButton>
-                <IconButton aria-label="Delete" color="inherit">
-                    <Delete color="secondary"/>
-                </IconButton>
+                
                 </>}
                 leftButtonOrIcon = {
                     <IconButton color="inherit" aria-label="Menu">

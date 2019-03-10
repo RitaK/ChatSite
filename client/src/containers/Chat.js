@@ -19,14 +19,16 @@ class Chat extends Component{
         super(props);
         this.state = {
             currentConv: '',
-            currMessages: []
+            currMessages: [],
+            currParticipants: []
         }
     }
 
     componentWillMount(){
         registerToGetConv( (err, conversation) => {
             console.log(conversation);
-            this.setState({currMessages: conversation.messages});
+            this.setState({currMessages: conversation.messages, 
+                currParticipants: conversation.usernamesInConv});
         });
     }
 
@@ -36,12 +38,16 @@ class Chat extends Component{
     
     render(){
         const {handleError, username, classes} = this.props;
-        const {currMessages} = this.state;
+        const {currMessages, currParticipants} = this.state;
 
+        const chatPanelProps = {
+            messages : currMessages,
+            currParticipants: currParticipants
+        }
         return(
             <Grid container className = {classes.root}>
             
-                <ChatPanel messages = {currMessages}>
+                <ChatPanel {...chatPanelProps}>
                 </ChatPanel>
                 <SidePanel selectedConv = {this.selectedConv} handleError = {handleError} username = {username}>
 

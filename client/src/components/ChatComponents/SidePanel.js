@@ -48,7 +48,7 @@ class SidePanel extends Component{
 
         
         return(
-            <>
+            
                 <Grid item className = {classes.root}>
                     <ActionsAppBar>
 
@@ -66,7 +66,7 @@ class SidePanel extends Component{
                             </ListItem>)}
                     </List>
                 </Grid>
-            </>
+            
         );
     }
 }
