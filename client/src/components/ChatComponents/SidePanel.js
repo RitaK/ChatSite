@@ -34,11 +34,16 @@ class SidePanel extends Component{
     };
 
     handleListItemClick = (event, convID) => {
+        /* var conv = this.state.conversations.find(function(element) {
+            return element._id == convID;
+          }); */
+        this.props.selectedConv(convID);
         this.setState({ selectedConvId: convID });
+        
     };
 
     render(){
-        const {conversations} = this.state;
+        const {conversations, selectedConvId} = this.state;
         const {classes} = this.props;
 
         
@@ -51,7 +56,7 @@ class SidePanel extends Component{
                     <List component="nav">
                         {conversations.map((conv) => 
                             <ListItem button 
-                                selected={this.state.selectedConvId === conv._id}
+                                selected={selectedConvId === conv._id}
                                 onClick={event => this.handleListItemClick(event, conv._id)}
                                 key = {conv._id}>
                                 <ListItemText

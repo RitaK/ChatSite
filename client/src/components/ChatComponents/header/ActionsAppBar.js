@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import ChatAppBar from './ChatAppBar';
-import {Button} from '@material-ui/core';
+import {IconButton} from '@material-ui/core';
+import {Search, AddCircle, Delete} from '@material-ui/icons';
+import MenuIcon from '@material-ui/icons/Menu';
 
 
 class ActionsAppBar extends Component{
@@ -8,10 +10,24 @@ class ActionsAppBar extends Component{
 
     render(){
         return(
-            <ChatAppBar text = "Conversations">
-                <Button color="primary">Find</Button>
-                <Button color="primary">Group Chat</Button>
-            </ChatAppBar>
+            <ChatAppBar text = "Conversations" 
+            buttons = {<>
+                <IconButton aria-label="Search" color="inherit">
+                    <Search color="secondary"/>
+                </IconButton>
+                <IconButton aria-label="Search" color="inherit">
+                    <AddCircle color="secondary"/>
+                </IconButton>
+                <IconButton aria-label="Delete" color="inherit">
+                    <Delete color="secondary"/>
+                </IconButton>
+                </>}
+                leftButtonOrIcon = {
+                    <IconButton color="inherit" aria-label="Menu">
+                        <MenuIcon color = "secondary"/>
+                    </IconButton>
+                }/>
+                
         );
     }
 }

@@ -124,13 +124,30 @@ module.exports = function(io, dbUtils){
                 socket.emit('got user conversations', {err: err, conversations: docs});
             });
         })
+        
         //The current user selected a user to talk to. 
         //Here we load all the messages from that conversation
-        socket.on('selected user', function(data, callback){
+        socket.on('selected user conversation', function(data){
             /* var usersInConv = [];
             usersInConv.push(data.userSelected);
             usersInConv.push(socket.username); */
-            dbUtils.findConversation(data.usersInChatSelected, callback);
+            dbUtils.findTwoUsersConversation(data.usersInChatSelected, (err, docs) =>{
+                socket.emit('got selected user conversation', {err: err, docs: docs});
+            });
+        });
+
+        socket.on('selected group conversation', function(data, callback){
+            
+            dbUtils.findGroupConversation(data.usersInChatSelected, (err, docs) =>{
+                socket.emit('got selected group conversation', {err: err, docs: docs});
+            });
+        });
+
+        socket.on('selected conversation', function(data){
+            
+            dbUtils.findConversationByID(data.convID, (err, conversation) =>{
+                socket.emit('got selected conversation', {err: err, conversation: conversation});
+            });
         });
     });
 }

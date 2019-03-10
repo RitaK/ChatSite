@@ -34,6 +34,23 @@ export function registerToMessageEvents(setConversations){
     });
 }
 
+/* export function registerToGetConv(presentConv){
+    socket.on('got group user conversation', ({err, conversations}) => {
+        presentConv(err, conversations);
+    });
+    socket.on('got selected group conversation', ({err, conversations}) => {
+        presentConv(err, conversations);
+    });
+}
+ */
+
+ export function registerToGetConv(presentConv){
+    socket.on('got selected conversation', ({err, conversation}) => {
+        presentConv(err, conversation);
+    });
+}
+
+
 export function emitUserCreateAccount(userInfo){
     socket.emit('new user', userInfo);
 }
@@ -42,4 +59,15 @@ export function getAllUserConversations(username){
     socket.emit('get user conversations', username);
 }
 
+/* export function userSelectedConversation(usernameToSendTo, currUsername){
+    let usersInvolved = {usersInChatSelected: [usernameToSendTo, currUsername]};
+    socket.emit('selected user conversation', usersInvolved);
+}
 
+export function groupSelectedConversation(groupName){
+    socket.emit('selected group conversation', {groupName: groupName});
+} */
+
+export function getSelectedConversation(convID){
+    socket.emit('selected conversation', {convID: convID});
+}

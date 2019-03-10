@@ -7,7 +7,23 @@ class ChatRoomAppBar extends Component{
 
     render(){
         return(
-            <AppBar item/>
+            <ChatAppBar text = "Conversations" 
+            buttons = {<>
+                <IconButton aria-label="Search" color="inherit">
+                    <Search color="secondary"/>
+                </IconButton>
+                <IconButton aria-label="Search" color="inherit">
+                    <AddCircle color="secondary"/>
+                </IconButton>
+                <IconButton aria-label="Delete" color="inherit">
+                    <Delete color="secondary"/>
+                </IconButton>
+                </>}
+                leftButtonOrIcon = {
+                    <IconButton color="inherit" aria-label="Menu">
+                        <MenuIcon color = "secondary"/>
+                    </IconButton>
+                }/>
         );
     }
 }

@@ -27,7 +27,7 @@ module.exports = function(app){
                         errMsg = err.errMsg;
                     }
                 }
-                
+
                 cb(!!errMsg && errMsg);
             });
         },
@@ -81,7 +81,7 @@ module.exports = function(app){
         },
 
         //Finds and returns the conversation that contains all the user specified in the array 'users'
-        findConversation: function(users, callback){
+        findTwoUsersConversation: function(users, callback){
             var that = this;
             var query = {
                 '$and': [{
@@ -94,9 +94,31 @@ module.exports = function(app){
                 if(err){
                     console.log('Could not find a converstation between ' + users + '. Error:'+ err);
                 }
-                else{
-                    callback(docs);
+                callback(err, docs);
+            });
+        },
+
+        //Finds and returns this group's conversation
+        findGroupConversation: function(groupname, callback){
+            var that = this;
+            var query = {"groupName": groupname};
+
+            Conversations.find(query,function(err, docs){
+                if(err){
+                    console.log('Could not find a converstation of group: ' + groupname + '. Error:'+ err);
                 }
+                callback(err, docs);
+            });
+        },
+
+        findConversationByID: function(convID, callback){
+            var query = {_id: convID};
+
+            Conversations.findOne(query,function(err, conversation){
+                if(err){
+                    console.log('Could not find a converstation of group id: ' + convID + '. Error:'+ err);
+                }
+                callback(err, conversation);
             });
         },
 

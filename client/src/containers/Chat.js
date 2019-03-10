@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import {Grid} from '@material-ui/core';
 import SidePanel from '../components/ChatComponents/SidePanel'
+import ChatPanel from '../components/ChatComponents/ChatPanel'
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import {registerToGetConv, getSelectedConversation} from '../api'
 
 var styles = theme =>({
     root: {
@@ -13,18 +15,35 @@ var styles = theme =>({
 
 
 class Chat extends Component{
-    
+    constructor(props){
+        super(props);
+        this.state = {
+            currentConv: '',
+            currMessages: []
+        }
+    }
+
+    componentWillMount(){
+        registerToGetConv( (err, conversation) => {
+            console.log(conversation);
+            this.setState({currMessages: conversation.messages});
+        });
+    }
+
+    selectedConv = (convID) => {
+        getSelectedConversation(convID);
+    };
     
     render(){
-        const {handleError, username} = this.props;
-        const {classes} = this.props;
+        const {handleError, username, classes} = this.props;
+        const {currMessages} = this.state;
 
         return(
             <Grid container className = {classes.root}>
-{/*             
-                <ChatPanel>
-                </ChatPanel> */}
-                <SidePanel handleError = {handleError} username = {username}>
+            
+                <ChatPanel messages = {currMessages}>
+                </ChatPanel>
+                <SidePanel selectedConv = {this.selectedConv} handleError = {handleError} username = {username}>
 
                 </SidePanel>
             </Grid>
