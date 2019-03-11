@@ -69,5 +69,21 @@ export function groupSelectedConversation(groupName){
 } */
 
 export function getSelectedConversation(convID){
-    socket.emit('selected conversation', {convID: convID});
+    socket.emit('selected conversation', convID);
+}
+
+export function sendMessage (message, convID, fromUser){
+    socket.emit('chat message', {message: message, convID: convID, fromUser:fromUser});
+}
+
+export function registerToMsgSent(addMessage){
+    socket.on('message sent', ({err, message}) => {
+        addMessage(err, message);
+    });
+}
+
+export function registerToReceivedMsg(addMessage){
+    socket.on('message received', ({err, message}) => {
+        addMessage(err, message);
+    });
 }

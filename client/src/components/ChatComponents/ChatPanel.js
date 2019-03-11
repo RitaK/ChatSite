@@ -3,7 +3,7 @@ import {Grid, List, ListItem, ListItemText, TextField} from '@material-ui/core';
 import ChatRoomAppBar from './header/ChatRoomAppBar'
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import { callbackify } from 'util';
+import {registerToMsgSent, registerToReceivedMsg} from './../../api'
 
 var styles = theme =>({
     root: {
@@ -33,8 +33,48 @@ var styles = theme =>({
 class ChatPanel extends Component{
     constructor(props){
         super(props);
+        this.state = {
+            currMessages: this.props.currMessages,
+            newMsgValue: ''
+        }
     }
 
+    componentWillMount(){
+
+        registerToMsgSent((err, message) => {
+            this.addMessage(err, message);
+        });
+
+        registerToReceivedMsg((err, message, convID) => {
+            if(convID === this.props.currentConv._id){
+                this.addMessage(err, message);
+            } else {
+                this.props.newMessageInConv(convID)
+            }
+        });
+    }
+
+    addMessage = (err, message) => {
+        if(!err){
+            this.setState((state) =>({
+                currMessages: state.currMessages.push(message)
+            }))
+        }else {
+            this.props.handleError(err);
+        }
+    }
+
+    onSend = (event) => {
+        event.preventDefault();
+        this.props.sendMessage(this.state.newMsgValue);
+    }
+
+    handleNewMsgChange = (event) => {
+        this.setState({
+            newMsgValue: event.target.value
+        });
+    }
+    
     render(){
 
         const {messages, currParticipants, classes} = this.props;
@@ -57,9 +97,12 @@ class ChatPanel extends Component{
                                 </ListItem>)}
                         </List>
                     </Grid>
-                    <Grid  item className = {classes.msgTextGrid}>
-                        <TextField className = {classes.msgText}>
-                        </TextField>
+                    <Grid item className = {classes.msgTextGrid}>
+                        <form onSubmit={this.onSend} >
+                            <TextField value={this.state.newMsgValue} onChange={this.handleNewMsgChange} className = {classes.msgText}>
+                            </TextField>
+                        </form>
+                        
                     </Grid>
                 </Grid>
                 <Grid item>

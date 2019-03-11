@@ -123,7 +123,7 @@ module.exports = function(app){
         },
 
         //Adds a message to a conversation containing all the users in 'users'
-        saveMsgToConv: function(users, message){
+        saveMsgToConvByUsers: function(users, message){
             var query = {
                 '$and': [{
                         "usernamesInConv": {"$all": users}
@@ -135,6 +135,16 @@ module.exports = function(app){
                 if(err){
                     console.log('Error in saving a message: '+ err + docs);
                 }
+            });
+        },
+
+        saveMsgToConvByID: function(convID, message, callback){
+            var query = {_id: convID};
+            Conversations.findOneAndUpdate(query, {$push: {messages: message}}, function(err, docs){
+                if(err){
+                    console.log('Error in saving a message: '+ err + docs);
+                }
+                callback(err, docs);
             });
         }
 

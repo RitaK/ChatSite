@@ -39,7 +39,7 @@ module.exports = function(io, dbUtils){
             console.log('Connected users ' + connectedUsers);
           });
     
-        //Sending a message
+/*         //Sending a message
         socket.on('chat message', function(data, callback){
             //Need to orginize this.
             //Also add group option
@@ -47,7 +47,7 @@ module.exports = function(io, dbUtils){
             
             //Copying the users array before the manipulation, so that the db call will work correctly
             var usersInConv = data.to.slice();
-            dbUtils.saveMsgToConv(usersInConv, data.message);
+            dbUtils.saveMsgToConvByUsers(usersInConv, data.message);
     
             
             var index = data.to.indexOf(socket.username);
@@ -59,13 +59,23 @@ module.exports = function(io, dbUtils){
             console.log('message: ' + data.message.message);
             //show the message on the receiver's screen
 
-            var user = _.some(connectedUsers, function(item) {
-                return item.username == username && item;
-              });
+            let user = connectedUsers.find((item) => item.username === username);
 
             if(user){
                 user.socket.emit('new message', {message: data.message.message, from: socket.username});
             }
+        }); */
+
+        socket.on('chat message', function(data){
+            //message, convID, fromUser
+            dbUtils.saveMsgToConvByID(data.convID, data.message, (err,docs) => {
+                let msgInfo = {err: err, message: data.message};
+                socket.emit('message sent', msgInfo);
+                io.to(data.convID).emit('message received', {convID: data.convID, ...msgInfo});
+            });
+
+            
+
         });
     
         //New user (or user connected)
@@ -115,22 +125,17 @@ module.exports = function(io, dbUtils){
 
                 } else {
                     docs.forEach(function(doc){
-                        //Decide if there's a need to join a room
-                        if(doc.usernamesInConv.length > 2){
-                            //socket.join('room 237');
-                        }
+                        socket.join(doc.id);
                     });
                 }
                 socket.emit('got user conversations', {err: err, conversations: docs});
             });
         })
         
-        //The current user selected a user to talk to. 
+       /*  //The current user selected a user to talk to. 
         //Here we load all the messages from that conversation
         socket.on('selected user conversation', function(data){
-            /* var usersInConv = [];
-            usersInConv.push(data.userSelected);
-            usersInConv.push(socket.username); */
+            
             dbUtils.findTwoUsersConversation(data.usersInChatSelected, (err, docs) =>{
                 socket.emit('got selected user conversation', {err: err, docs: docs});
             });
@@ -141,12 +146,22 @@ module.exports = function(io, dbUtils){
             dbUtils.findGroupConversation(data.usersInChatSelected, (err, docs) =>{
                 socket.emit('got selected group conversation', {err: err, docs: docs});
             });
-        });
+        }); */
 
-        socket.on('selected conversation', function(data){
+        socket.on('selected conversation', function(convID){
             
-            dbUtils.findConversationByID(data.convID, (err, conversation) =>{
-                socket.emit('got selected conversation', {err: err, conversation: conversation});
+            dbUtils.findConversationByID(convID, (err, conversation) =>{
+
+                var usersConnectedToRoom =  [];
+                io.in(conversation.id).clients((err , clients) => {
+                    clients.find((clientID) =>{
+                        let item = connectedUsers.find((item) => item.socket.id === clientID);
+                        usersConnectedToRoom.push(item.username)
+                    })
+                    
+                });
+
+                socket.emit('got selected conversation', {err: err, conversation: conversation, usersConnected: usersConnectedToRoom});
             });
         });
     });
