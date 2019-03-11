@@ -7,7 +7,8 @@ import PropTypes from 'prop-types';
 
 var styles = theme =>({
     root: {
-        width: '40%'
+       /*  width: '40%',
+        'min-width': 'fit-content' */
     },
 
 });
@@ -49,7 +50,7 @@ class SidePanel extends Component{
         
         return(
             
-                <Grid item className = {classes.root}>
+                <Grid sm={5} item className = {classes.root}>
                     <ActionsAppBar>
 
                     </ActionsAppBar>

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { IconButton } from '@material-ui/core';
 import ChatAppBar from './ChatAppBar'
-import MenuIcon from '@material-ui/icons/Menu';
+
 
 
 class ChatRoomAppBar extends Component{
@@ -14,11 +13,7 @@ class ChatRoomAppBar extends Component{
             buttons = {<>
                 
                 </>}
-                leftButtonOrIcon = {
-                    <IconButton color="inherit" aria-label="Menu">
-                        <MenuIcon color = "secondary"/>
-                    </IconButton>
-                }/>
+                />
         );
     }
 }

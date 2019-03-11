@@ -8,7 +8,7 @@ import {registerToGetConv, getSelectedConversation} from '../api'
 
 var styles = theme =>({
     root: {
-        height: '100%'
+        height: '100vh'
     },
 
 });
@@ -45,13 +45,10 @@ class Chat extends Component{
             currParticipants: currParticipants
         }
         return(
-            <Grid container className = {classes.root}>
-            
-                <ChatPanel {...chatPanelProps}>
-                </ChatPanel>
-                <SidePanel selectedConv = {this.selectedConv} handleError = {handleError} username = {username}>
-
-                </SidePanel>
+            <Grid container direction={'row'} className = {classes.root}>
+                <SidePanel selectedConv = {this.selectedConv} handleError = {handleError} username = {username}/>
+                <ChatPanel {...chatPanelProps}/>
+                
             </Grid>
             
         );
