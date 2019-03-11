@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import {Grid, List, ListItem, ListItemText} from '@material-ui/core';
-import {getAllUserConversations, registerToMessageEvents} from '../../api'
+import {getAllUserConversations, registerToGetConversations} from '../../api'
 import ActionsAppBar from './header/ActionsAppBar'
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import {getSelectedConversation} from '../../api'
 
 var styles = theme =>({
     root: {
@@ -23,7 +24,7 @@ class SidePanel extends Component{
     }
     componentWillMount(){
         //On getting the conversations
-        registerToMessageEvents((err, conversations) => {
+        registerToGetConversations((err, conversations) => {
             if(err){
                 this.props.handleError(err);
             } else{
@@ -38,7 +39,7 @@ class SidePanel extends Component{
         /* var conv = this.state.conversations.find(function(element) {
             return element._id == convID;
           }); */
-        this.props.selectedConv(convID);
+        getSelectedConversation(convID);
         this.setState({ selectedConvId: convID });
         
     };

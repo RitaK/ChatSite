@@ -39,32 +39,6 @@ module.exports = function(io, dbUtils){
             console.log('Connected users ' + connectedUsers);
           });
     
-/*         //Sending a message
-        socket.on('chat message', function(data, callback){
-            //Need to orginize this.
-            //Also add group option
-            //AND - When the receiving user is not connected - check for this and just save it.
-            
-            //Copying the users array before the manipulation, so that the db call will work correctly
-            var usersInConv = data.to.slice();
-            dbUtils.saveMsgToConvByUsers(usersInConv, data.message);
-    
-            
-            var index = data.to.indexOf(socket.username);
-                if (index > -1) {
-                    data.to.splice(index, 1); 
-                }
-            //show the message on the writer's screen
-            callback({message: data.message.message, from: socket.username});
-            console.log('message: ' + data.message.message);
-            //show the message on the receiver's screen
-
-            let user = connectedUsers.find((item) => item.username === username);
-
-            if(user){
-                user.socket.emit('new message', {message: data.message.message, from: socket.username});
-            }
-        }); */
 
         socket.on('chat message', function(data){
             //message, convID, fromUser
@@ -132,21 +106,6 @@ module.exports = function(io, dbUtils){
             });
         })
         
-       /*  //The current user selected a user to talk to. 
-        //Here we load all the messages from that conversation
-        socket.on('selected user conversation', function(data){
-            
-            dbUtils.findTwoUsersConversation(data.usersInChatSelected, (err, docs) =>{
-                socket.emit('got selected user conversation', {err: err, docs: docs});
-            });
-        });
-
-        socket.on('selected group conversation', function(data, callback){
-            
-            dbUtils.findGroupConversation(data.usersInChatSelected, (err, docs) =>{
-                socket.emit('got selected group conversation', {err: err, docs: docs});
-            });
-        }); */
 
         socket.on('selected conversation', function(convID){
             

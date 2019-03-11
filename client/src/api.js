@@ -3,6 +3,9 @@ import openSocket from 'socket.io-client';
 import { rejects } from 'assert'; */
 const  socket = openSocket('http://localhost:5000');
 
+/*
+    Login and logout
+*/
 
 export function emitUserLogin(userInfo){
     //Trying to sign the user in
@@ -28,21 +31,27 @@ export function registerToLoginLogoutEvents(onDisconnect, onUserLogin){
 
 }
 
-export function registerToMessageEvents(setConversations){
+/*
+    Get conversations
+*/
+
+export function getAllUserConversations(username){
+    socket.emit('get user conversations', username);
+}
+
+export function registerToGetConversations(setConversations){
     socket.on('got user conversations', ({err, conversations}) => {
         setConversations(err, conversations);
     });
 }
 
-/* export function registerToGetConv(presentConv){
-    socket.on('got group user conversation', ({err, conversations}) => {
-        presentConv(err, conversations);
-    });
-    socket.on('got selected group conversation', ({err, conversations}) => {
-        presentConv(err, conversations);
-    });
+/*
+    Get selected conversation
+*/
+
+export function getSelectedConversation(convID){
+    socket.emit('selected conversation', convID);
 }
- */
 
  export function registerToGetConv(presentConv){
     socket.on('got selected conversation', ({err, conversation}) => {
@@ -50,27 +59,17 @@ export function registerToMessageEvents(setConversations){
     });
 }
 
+/*
+    New user
+*/
 
 export function emitUserCreateAccount(userInfo){
     socket.emit('new user', userInfo);
 }
 
-export function getAllUserConversations(username){
-    socket.emit('get user conversations', username);
-}
-
-/* export function userSelectedConversation(usernameToSendTo, currUsername){
-    let usersInvolved = {usersInChatSelected: [usernameToSendTo, currUsername]};
-    socket.emit('selected user conversation', usersInvolved);
-}
-
-export function groupSelectedConversation(groupName){
-    socket.emit('selected group conversation', {groupName: groupName});
-} */
-
-export function getSelectedConversation(convID){
-    socket.emit('selected conversation', convID);
-}
+/*
+    Sending and receiving messages
+*/
 
 export function sendMessage (message, convID, fromUser){
     socket.emit('chat message', {message: message, convID: convID, fromUser:fromUser});
@@ -83,7 +82,7 @@ export function registerToMsgSent(addMessage){
 }
 
 export function registerToReceivedMsg(addMessage){
-    socket.on('message received', ({err, message}) => {
-        addMessage(err, message);
+    socket.on('message received', ({convID, err, message}) => {
+        addMessage(convID, err, message);
     });
 }
