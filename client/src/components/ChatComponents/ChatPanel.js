@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import {Grid, List, ListItem, ListItemText, TextField} from '@material-ui/core';
+import {Grid, List, ListItem, ListItemText} from '@material-ui/core';
 import ChatRoomAppBar from './header/ChatRoomAppBar'
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import {registerToMsgSent, registerToReceivedMsg, registerToGetConv, sendMessage, getSelectedConversation} from './../../api'
+import TextArea from './TextArea'
 
 var styles = theme =>({
     root: {
@@ -21,9 +22,6 @@ var styles = theme =>({
         bottom: 0,
         position: 'fixed'
     },
-    msgText: {
-        width: '100vw'
-    },
     msgDisplayPanel: {
         height: '50px'
     }
@@ -34,13 +32,8 @@ class ChatPanel extends Component{
     constructor(props){
         super(props);
         this.state = {
-            currentConv: {},
-            newMsgValue: ''
+            currentConv: {}
         }
-        /* this.state = {
-            currMessages: this.props.currMessages,
-            newMsgValue: ''
-        } */
     }
 
     componentWillMount(){
@@ -70,23 +63,16 @@ class ChatPanel extends Component{
         getSelectedConversation(convID);
     }
 
-    onSend = (event) => {
-        event.preventDefault();
-        let {newMsgValue: message} = this.state;
+    onSend = (newMsgValue) => {
+        
         let convID = this.state.currentConv._id;
         let fromUser = localStorage.getItem('username');
         let msgObj = {
             timeStamp: this.getCurrDate(),
             sender: fromUser,
-            message: message
+            message: newMsgValue
         };
         sendMessage(msgObj, convID, fromUser);
-    }
-
-    handleNewMsgChange = (event) => {
-        this.setState({
-            newMsgValue: event.target.value
-        });
     }
 
     newMessageInConv = () => {
@@ -115,7 +101,6 @@ class ChatPanel extends Component{
 
         const {classes} = this.props;
         const {currentConv: {messages = [], usernamesInConv = []}} = this.state;
-        //const {messages: {messages}  = {}, usernamesInConv: {currParticipants} = {}} = this.state;
 
         return(
             <Grid sm={7} item className = {classes.root}>
@@ -141,11 +126,7 @@ class ChatPanel extends Component{
                         </List>
                     </Grid>
                     <Grid item className = {classes.msgTextGrid}>
-                        <form onSubmit={this.onSend} >
-                            <TextField value={this.state.newMsgValue} onChange={this.handleNewMsgChange} className = {classes.msgText}>
-                            </TextField>
-                        </form>
-                        
+                        <TextArea onSend = {this.onSend}/>
                     </Grid>
                 </Grid>
                 <Grid item>
