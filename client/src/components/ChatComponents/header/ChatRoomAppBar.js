@@ -37,7 +37,7 @@ class ChatRoomAppBar extends Component{
                             return false;
                         }
                         return <Typography 
-                            key = {user.username} color = {user.connected ? "primary": "secondary"}>
+                            key = {user.username} variant="h6"  color = {user.connected ? "primary": "secondary"}>
                                 {user.username}
                             </Typography>}
                         )}

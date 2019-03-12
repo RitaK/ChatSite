@@ -4,7 +4,7 @@ import ChatRoomAppBar from './header/ChatRoomAppBar'
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import {registerToMsgSent, registerToReceivedMsg, registerToGetConv,
-     sendMessage, getSelectedConversation,registerToUserActive} from './../../api'
+     sendMessage, getSelectedConversation,registerToUserActive, registerToUserNotActive} from './../../api'
 import TextArea from './TextArea'
 
 
@@ -65,9 +65,26 @@ class ChatPanel extends Component{
 
     componentDidMount(){
         registerToUserActive((username)=> {
-            this.setState((state) => ({
-                usersConnected : [...state.usersConnected, username]
-            }));
+            this.setState((state) => {
+                let userInConnectedList = state.usersConnected.find(function(element) {
+                    return element === username;
+                  });
+                if(!userInConnectedList){
+                    return {usersConnected : [...state.usersConnected, username]}
+                }
+            });
+        });
+
+        registerToUserNotActive((username)=> {
+            this.setState((state) => {
+                let userInConnectedList = state.usersConnected.find(function(element) {
+                    return element === username;
+                  });
+                if(userInConnectedList){
+                    state.usersConnected.splice( state.usersConnected.indexOf(username), 1 );
+                    return {usersConnected : state.usersConnected}
+                }
+            });
         });
     }
 

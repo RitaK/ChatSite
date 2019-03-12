@@ -92,3 +92,9 @@ export function registerToUserActive(userActive){
         userActive(username);
     });
 }
+
+export function registerToUserNotActive(userNotActive){
+    socket.on('chat user not connected', ({username}) => {
+        userNotActive(username);
+    });
+}

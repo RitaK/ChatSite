@@ -25,10 +25,10 @@ class ChatAppBar extends Component{
             <AppBar position = "static" color = "primary" className = {classes.root}>
                 <Toolbar>
                     {leftButtonOrIcon}
+                    {additionalText}
                     <Typography variant="h6" className={classes.grow} color = "secondary">
                         {text}
                     </Typography>
-                    {additionalText}
                     <Grid className = {classes.buttons} item>
                         {buttons}
                     </Grid>

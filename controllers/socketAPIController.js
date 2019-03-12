@@ -3,6 +3,7 @@ const saltRounds = 10;
 
 var connectedUsers = [];
 
+
 module.exports = function(io, dbUtils){
     var self = this;
 
@@ -15,15 +16,26 @@ module.exports = function(io, dbUtils){
         } else {
             //Adding this socket to the connectedUsers
             connectedUsers.push({ username: username, socket: socket });
-            console.log('Connected users ' + connectedUsers.username);
+            
         }
     }
 
     io.on('connection', function(socket){
         console.log('A user is connected');
     
+        socket.on('disconnecting', function(reason){
+            var id = socket.id;
+            //Notify all rooms that this user is disconnected
+            for(room in socket.rooms ){
+              // For each room the user is in, excluding his own room
+              if(room != id){
+                    io.to(room).emit('chat user not connected', {username: socket.username});
+              }
+            };
+          });
+
         //Disconnecting from the server
-        socket.on('disconnect', function(){
+        socket.on('disconnect', function(socketDis){
             var username = socket.username || "";
             if(connectedUsers.length > 0 && username != ""){
                 let user = connectedUsers.find((item) => item.username === username);
@@ -32,7 +44,7 @@ module.exports = function(io, dbUtils){
                 }
                 
             }
-    
+            
             //Make user appear offline
             socket.emit('disconnected user', username);
             console.log('User ' + username + ' disconnected');
@@ -67,6 +79,7 @@ module.exports = function(io, dbUtils){
                         } else{
                             this.err = 'Wrong password';
                         }
+                        console.log('User '+ data.username + ' is logged in');
                         socket.emit('user login response', {err: this.err, username: data.username});                       
                     });
                 } else {
@@ -117,9 +130,7 @@ module.exports = function(io, dbUtils){
                 let usersConnectedToRoom =  [];
                 //Get the clients connected to the room
                 let clientsInRoom =io.sockets.adapter.rooms[conversation.id].sockets;
-                //Get the number of clients
-                let numClients = (typeof clientsInRoom !== 'undefined') ? Object.keys(clientsInRoom).length : 0;
-
+                
                
                 for(clientID in clientsInRoom){
                     let clientSocket = io.sockets.connected[clientID];
