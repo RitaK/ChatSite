@@ -3,8 +3,10 @@ import {Grid, List, ListItem, ListItemText} from '@material-ui/core';
 import ChatRoomAppBar from './header/ChatRoomAppBar'
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import {registerToMsgSent, registerToReceivedMsg, registerToGetConv, sendMessage, getSelectedConversation} from './../../api'
+import {registerToMsgSent, registerToReceivedMsg, registerToGetConv,
+     sendMessage, getSelectedConversation,registerToUserActive} from './../../api'
 import TextArea from './TextArea'
+
 
 var styles = theme =>({
     root: {
@@ -32,15 +34,17 @@ class ChatPanel extends Component{
     constructor(props){
         super(props);
         this.state = {
-            currentConv: {}
+            currentConv: {},
+            usersConnected: []
         }
+        this.messages = React.createRef();
     }
 
     componentWillMount(){
 
-        registerToGetConv( (err, conversation) => {
+        registerToGetConv( (err, conversation, usersConnected) => {
             console.log(conversation);
-            this.setState({currentConv: conversation});
+            this.setState({currentConv: conversation, usersConnected: usersConnected});
         });
 
         registerToMsgSent((err, message) => {
@@ -59,6 +63,18 @@ class ChatPanel extends Component{
         });
     }
 
+    componentDidMount(){
+        registerToUserActive((username)=> {
+            this.setState((state) => ({
+                usersConnected : [...state.usersConnected, username]
+            }));
+        });
+    }
+
+    componentDidUpdate(){
+        //console.log(this.messages.current.clientHeight);
+    }
+
     updateMessages = (convID) => {
         getSelectedConversation(convID);
     }
@@ -66,13 +82,11 @@ class ChatPanel extends Component{
     onSend = (newMsgValue) => {
         
         let convID = this.state.currentConv._id;
-        let fromUser = localStorage.getItem('username');
         let msgObj = {
             timeStamp: this.getCurrDate(),
-            sender: fromUser,
             message: newMsgValue
         };
-        sendMessage(msgObj, convID, fromUser);
+        sendMessage(msgObj, convID);
     }
 
     newMessageInConv = () => {
@@ -100,15 +114,15 @@ class ChatPanel extends Component{
     render(){
 
         const {classes} = this.props;
-        const {currentConv: {messages = [], usernamesInConv = []}} = this.state;
+        const {currentConv: {messages = [], usernamesInConv = []}, usersConnected} = this.state;
 
         return(
             <Grid sm={7} item className = {classes.root}>
-                <ChatRoomAppBar currParticipants = {usernamesInConv}>
+                <ChatRoomAppBar currParticipants = {usernamesInConv} usersConnected = {usersConnected}>
 
                 </ChatRoomAppBar>
                 <Grid container  className = {classes.convContainer}  direction={'column'}>
-                    <Grid className = {classes.convPanel} item>
+                    <Grid ref = {this.messages} className = {classes.convPanel} item>
                         <List>
                             {messages.map((msg) => {
                                 if(!msg._id){
@@ -120,8 +134,7 @@ class ChatPanel extends Component{
                                         primary={msg.message}
                                         secondary = {msg.sender}
                                         />
-                                    </ListItem>
-                            }
+                                    </ListItem>}
                                 )}
                         </List>
                     </Grid>

@@ -19,7 +19,7 @@ class ChatAppBar extends Component{
     
 
     render(){
-        const {classes, text, buttons, leftButtonOrIcon} = this.props;
+        const {classes, text, buttons, leftButtonOrIcon, additionalText} = this.props;
         
         return(
             <AppBar position = "static" color = "primary" className = {classes.root}>
@@ -28,6 +28,7 @@ class ChatAppBar extends Component{
                     <Typography variant="h6" className={classes.grow} color = "secondary">
                         {text}
                     </Typography>
+                    {additionalText}
                     <Grid className = {classes.buttons} item>
                         {buttons}
                     </Grid>

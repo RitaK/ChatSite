@@ -14,8 +14,8 @@ module.exports = function(io, dbUtils){
             console.log('user ' + username+ ' is already logged in')
         } else {
             //Adding this socket to the connectedUsers
-            connectedUsers.push({ user: username, socket: socket });
-            console.log('Connected users ' + connectedUsers);
+            connectedUsers.push({ username: username, socket: socket });
+            console.log('Connected users ' + connectedUsers.username);
         }
     }
 
@@ -42,14 +42,15 @@ module.exports = function(io, dbUtils){
 
         socket.on('chat message', function(data){
             //message, convID, fromUser
-            dbUtils.saveMsgToConvByID(data.convID, data.message, (err,docs) => {
-                let msgInfo = {err: err, message: data.message};
-                socket.emit('message sent', msgInfo);
-                io.to(data.convID).emit('message received', {convID: data.convID, ...msgInfo});
-            });
+            if(data.message){
+                data.message.sender = socket.username;
 
-            
-
+                dbUtils.saveMsgToConvByID(data.convID, data.message, (err,docs) => {
+                    let msgInfo = {err: err, message: data.message};
+                    socket.emit('message sent', msgInfo);
+                    io.to(data.convID).emit('message received', {convID: data.convID, ...msgInfo});
+                });
+            }
         });
     
         //New user (or user connected)
@@ -61,6 +62,7 @@ module.exports = function(io, dbUtils){
                 if(hashedPass){
                     bcrypt.compare(data.password, hashedPass).then((res) => {
                         if(res){
+                            socket.username = data.username;
                             addUserConnectedUserSocket(data.username, socket);    
                         } else{
                             this.err = 'Wrong password';
@@ -100,6 +102,7 @@ module.exports = function(io, dbUtils){
                 } else {
                     docs.forEach(function(doc){
                         socket.join(doc.id);
+                        io.to(doc.id).emit('chat user connected', {username: username});
                     });
                 }
                 socket.emit('got user conversations', {err: err, conversations: docs});
@@ -111,18 +114,24 @@ module.exports = function(io, dbUtils){
             
             dbUtils.findConversationByID(convID, (err, conversation) =>{
 
-                var usersConnectedToRoom =  [];
-                io.in(conversation.id).clients((err , clients) => {
-                    clients.find((clientID) =>{
-                        let item = connectedUsers.find((item) => item.socket.id === clientID);
-                        usersConnectedToRoom.push(item.username)
-                    })
-                    
-                });
+                let usersConnectedToRoom =  [];
+                //Get the clients connected to the room
+                let clientsInRoom =io.sockets.adapter.rooms[conversation.id].sockets;
+                //Get the number of clients
+                let numClients = (typeof clientsInRoom !== 'undefined') ? Object.keys(clientsInRoom).length : 0;
+
+               
+                for(clientID in clientsInRoom){
+                    let clientSocket = io.sockets.connected[clientID];
+                    if(clientSocket.username){
+                        usersConnectedToRoom.push(clientSocket.username);
+                    }
+                }
 
                 socket.emit('got selected conversation', {err: err, conversation: conversation, usersConnected: usersConnectedToRoom});
             });
         });
+
     });
 }
 

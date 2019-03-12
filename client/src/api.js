@@ -54,8 +54,8 @@ export function getSelectedConversation(convID){
 }
 
  export function registerToGetConv(presentConv){
-    socket.on('got selected conversation', ({err, conversation}) => {
-        presentConv(err, conversation);
+    socket.on('got selected conversation', ({err, conversation, usersConnected}) => {
+        presentConv(err, conversation, usersConnected);
     });
 }
 
@@ -71,8 +71,8 @@ export function emitUserCreateAccount(userInfo){
     Sending and receiving messages
 */
 
-export function sendMessage (message, convID, fromUser){
-    socket.emit('chat message', {message: message, convID: convID, fromUser:fromUser});
+export function sendMessage (message, convID){
+    socket.emit('chat message', {message: message, convID: convID});
 }
 
 export function registerToMsgSent(addMessage){
@@ -84,5 +84,11 @@ export function registerToMsgSent(addMessage){
 export function registerToReceivedMsg(addMessage){
     socket.on('message received', ({convID, err, message}) => {
         addMessage(convID, err, message);
+    });
+}
+
+export function registerToUserActive(userActive){
+    socket.on('chat user connected', ({username}) => {
+        userActive(username);
     });
 }
