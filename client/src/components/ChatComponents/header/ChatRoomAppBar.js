@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ChatAppBar from './ChatAppBar'
-import {Typography} from '@material-ui/core';
+import {Chip} from '@material-ui/core';
 
 
 
@@ -19,7 +19,10 @@ class ChatRoomAppBar extends Component{
         return chatUsersWStatus;
     }
     
-    
+    handleSelectedUserChip= () => {
+
+    }
+
     render(){
         const {currParticipants = [], usersConnected = []} = this.props;
         const connectedUsers = this.updateConnectedUsers(currParticipants,  usersConnected);
@@ -36,10 +39,12 @@ class ChatRoomAppBar extends Component{
                         if(!user.username){
                             return false;
                         }
-                        return <Typography 
-                            key = {user.username} variant="h6"  color = {user.connected ? "primary": "secondary"}>
-                                {user.username}
-                            </Typography>}
+                        return <Chip
+                            key = {user.username}
+                            label={user.username} 
+                            color = {user.connected? "primary":"secondary"}
+                            onClick={this.handleSelectedUserChip}
+                            />}
                         )}
                 />
         );
