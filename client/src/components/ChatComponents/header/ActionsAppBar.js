@@ -4,10 +4,14 @@ import {IconButton, Chip, MenuList, Paper, Grow, Popper, MenuItem} from '@materi
 import {Search, AddCircle, Delete} from '@material-ui/icons';
 import MenuIcon from '@material-ui/icons/Menu';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import resources from '../../../resources/default'
+
 
 const popperStyle = {
     zIndex: 1
 }
+
+const {conversations, userSearch, userProfile} = resources.sidePanelViews;
 
 class ActionsAppBar extends Component{
 
@@ -35,18 +39,19 @@ class ActionsAppBar extends Component{
         this.setState(state => ({ menuOpen: !state.menuOpen }));
       };
 
-    handleClose = event => {
+    handleClose = (event, viewName) => {
         if (this.anchorEl.contains(event.target)) {
             return;
         }
 
         this.setState({ menuOpen: false });
-        if(event.target.value === "profile"){
-            
-        }else if(event.target.value === "logout"){
 
-        }
+        this.props.onSwitchView(viewName);
     };
+
+    switchView = (viewName) =>{
+        this.props.onSwitchView(viewName);
+    }
 
     render(){
         const { menuOpen } = this.state;
@@ -57,7 +62,7 @@ class ActionsAppBar extends Component{
                 <IconButton aria-label="Search" color="inherit">
                     <Search color="secondary"/>
                 </IconButton>
-                <IconButton aria-label="Search" color="inherit">
+                <IconButton onClick={(e) => this.switchView(userSearch)} aria-label="Add" color="inherit">
                     <AddCircle color="secondary"/>
                 </IconButton>
                 <IconButton aria-label="Delete" color="inherit">
@@ -80,7 +85,7 @@ class ActionsAppBar extends Component{
                         <Paper>
                         <ClickAwayListener onClickAway={this.handleClose}>
                             <MenuList>
-                            <MenuItem value = {"profile"} onClick={this.handleClose}>Profile</MenuItem>
+                            <MenuItem  onClick={(e) => this.handleClose(e, userProfile) }>Profile</MenuItem>
                             <MenuItem value = {"logout"} onClick={this.handleClose}>Logout</MenuItem>
                             </MenuList>
                         </ClickAwayListener>

@@ -17,5 +17,10 @@ module.exports = {
     userStates: {
         loggedIn: "loggedIn",
         notLoggedIn: "notLoggedIn"
+    },
+    sidePanelViews: {
+        conversations: "conversations",
+        userSearch: "userSearch",
+        userProfile: "userProfile"
     }
   } 

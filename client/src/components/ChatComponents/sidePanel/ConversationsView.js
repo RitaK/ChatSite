@@ -11,7 +11,7 @@ class ConversationsView extends Component{
             conversations: []
         }
     }
-    componentWillMount(){
+    componentDidMount(){
         //On getting the conversations
         registerToGetConversations((err, conversations) => {
             if(err){
