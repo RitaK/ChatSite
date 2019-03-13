@@ -3,13 +3,6 @@ import ChatAppBar from './ChatAppBar'
 import {Chip} from '@material-ui/core';
 
 
-const connectedUserStyle = {
-    'backgroundColor': '#3bd665e8143b'
-  };
-
-const notConnectedUserStyle = {
-    'backgroundColor': '#'
-};
 
 class ChatRoomAppBar extends Component{
 
@@ -38,6 +31,7 @@ class ChatRoomAppBar extends Component{
         const {currParticipants = [], usersConnected = []} = this.props;
         const connectedUsers = this.updateConnectedUsers(currParticipants,  usersConnected);
         
+        
         return(
             <ChatAppBar 
             buttons = {<>
@@ -51,7 +45,7 @@ class ChatRoomAppBar extends Component{
                         return <Chip
                             key = {user.username}
                             label={user.username} 
-                            style = {user.connected? connectedUserStyle: notConnectedUserStyle}
+                            color = {user.connected? "secondary": "primary"}
                             onClick={this.handleSelectedUserChip}
                             />}
                         )}

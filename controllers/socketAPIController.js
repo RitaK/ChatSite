@@ -129,7 +129,7 @@ module.exports = function(io, dbUtils){
 
                 let usersConnectedToRoom =  [];
                 //Get the clients connected to the room
-                let clientsInRoom =io.sockets.adapter.rooms[conversation.id].sockets || [];
+                let clientsInRoom =io.sockets.adapter.rooms[conversation.id]? io.sockets.adapter.rooms[conversation.id].sockets : [];
                 
                
                 for(clientID in clientsInRoom){

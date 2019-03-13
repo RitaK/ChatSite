@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Grid} from '@material-ui/core';
-import SidePanel from '../components/ChatComponents/SidePanel'
+import SidePanel from '../components/ChatComponents/sidePanel/SidePanel'
 import ChatPanel from '../components/ChatComponents/ChatPanel'
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';

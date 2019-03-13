@@ -106,10 +106,11 @@ class Index extends Component {
                 <Route path={`/${registration}`} render ={() => (
                   <Registration {...RegistrationProps}  />
                 )} />
-                {this.state.userState === resources.userStates.loggedIn && 
+                {this.state.userState === resources.userStates.loggedIn ? 
                   <Route path={`/${chat}`} render = {() => (
                     <Chat {...ChatProps}/>
-                  )} />}
+                  )} /> :
+                  <Redirect  to={`/${login}`}/> }
               </Switch>
             </CSSTransition>
           </TransitionGroup>

@@ -17,6 +17,9 @@ const theme = createMuiTheme({
               main: '#ffcdd2',
               dark: '#cb9ca1',
               contrastText: '#4e342e',
+            },
+            notConnected: {
+              main: "#ff4444"
             }
           },
         typography: {

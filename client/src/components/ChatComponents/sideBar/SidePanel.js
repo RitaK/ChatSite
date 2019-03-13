@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import {Grid, List, ListItem, ListItemText} from '@material-ui/core';
-import {getAllUserConversations, registerToGetConversations} from '../../api'
-import ActionsAppBar from './header/ActionsAppBar'
+import {getAllUserConversations, registerToGetConversations} from '../../../api'
+import ActionsAppBar from '../header/ActionsAppBar'
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import {getSelectedConversation} from '../../api'
+import {getSelectedConversation} from '../../../api'
 
 var styles = theme =>({
     root: {
@@ -49,21 +49,26 @@ class SidePanel extends Component{
         return(
             
                 <Grid sm={5} item className = {classes.root}>
-                    <ActionsAppBar username = {username}>
+                    <Grid container > 
+                        <ConversationsList>
+                        </ConversationsList>
+                        <ActionsAppBar username = {username}>
 
-                    </ActionsAppBar>
-                    <List component="nav">
-                        {conversations.map((conv) => 
-                            <ListItem button 
-                                selected={selectedConvId === conv._id}
-                                onClick={event => this.handleListItemClick(event, conv._id)}
-                                key = {conv._id}>
-                                <ListItemText
-                                    primary={conv.groupName}
-                                    secondary = {conv.usernamesInConv}
-                                    />
-                            </ListItem>)}
-                    </List>
+                        </ActionsAppBar>
+                        <List component="nav">
+                            {conversations.map((conv) => 
+                                <ListItem button 
+                                    selected={selectedConvId === conv._id}
+                                    onClick={event => this.handleListItemClick(event, conv._id)}
+                                    key = {conv._id}>
+                                    <ListItemText
+                                        primary={conv.groupName}
+                                        secondary = {conv.usernamesInConv}
+                                        />
+                                </ListItem>)}
+                        </List>
+                    </Grid>
+                    
                 </Grid>
             
         );
