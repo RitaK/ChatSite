@@ -23,7 +23,8 @@ class Chat extends Component{
         const {handleError, username, classes} = this.props;
 
         const chatPanelProps = {
-            handleError: handleError
+            handleError: handleError,
+            username: username
         }
         return(
             <Grid container direction={'row'} className = {classes.root}>

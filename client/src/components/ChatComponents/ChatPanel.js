@@ -43,7 +43,6 @@ class ChatPanel extends Component{
     componentWillMount(){
 
         registerToGetConv( (err, conversation, usersConnected) => {
-            console.log(conversation);
             this.setState({currentConv: conversation, usersConnected: usersConnected});
         });
 
@@ -130,12 +129,12 @@ class ChatPanel extends Component{
     
     render(){
 
-        const {classes} = this.props;
+        const {classes, username} = this.props;
         const {currentConv: {messages = [], usernamesInConv = []}, usersConnected} = this.state;
 
         return(
             <Grid sm={7} item className = {classes.root}>
-                <ChatRoomAppBar currParticipants = {usernamesInConv} usersConnected = {usersConnected}>
+                <ChatRoomAppBar currParticipants = {usernamesInConv} username = {username} usersConnected = {usersConnected}>
 
                 </ChatRoomAppBar>
                 <Grid container  className = {classes.convContainer}  direction={'column'}>

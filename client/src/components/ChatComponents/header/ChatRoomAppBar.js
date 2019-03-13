@@ -3,12 +3,23 @@ import ChatAppBar from './ChatAppBar'
 import {Chip} from '@material-ui/core';
 
 
+const connectedUserStyle = {
+    'backgroundColor': '#3bd665e8143b'
+  };
+
+const notConnectedUserStyle = {
+    'backgroundColor': '#'
+};
 
 class ChatRoomAppBar extends Component{
 
 
     updateConnectedUsers(currParticipants, usersConnected){
+        
         let chatUsersWStatus = currParticipants.map(item => {
+            if(item === this.props.username){
+                return false;
+            }
             let connected = false;
             if(usersConnected.includes(item)){
                 connected= true;
@@ -26,8 +37,6 @@ class ChatRoomAppBar extends Component{
     render(){
         const {currParticipants = [], usersConnected = []} = this.props;
         const connectedUsers = this.updateConnectedUsers(currParticipants,  usersConnected);
-
-        console.log(connectedUsers);
         
         return(
             <ChatAppBar 
@@ -42,7 +51,7 @@ class ChatRoomAppBar extends Component{
                         return <Chip
                             key = {user.username}
                             label={user.username} 
-                            color = {user.connected? "primary":"secondary"}
+                            style = {user.connected? connectedUserStyle: notConnectedUserStyle}
                             onClick={this.handleSelectedUserChip}
                             />}
                         )}

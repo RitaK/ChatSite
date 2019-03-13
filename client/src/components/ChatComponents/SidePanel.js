@@ -36,9 +36,6 @@ class SidePanel extends Component{
     };
 
     handleListItemClick = (event, convID) => {
-        /* var conv = this.state.conversations.find(function(element) {
-            return element._id == convID;
-          }); */
         getSelectedConversation(convID);
         this.setState({ selectedConvId: convID });
         
@@ -46,13 +43,13 @@ class SidePanel extends Component{
 
     render(){
         const {conversations, selectedConvId} = this.state;
-        const {classes} = this.props;
+        const {classes, username} = this.props;
 
         
         return(
             
                 <Grid sm={5} item className = {classes.root}>
-                    <ActionsAppBar>
+                    <ActionsAppBar username = {username}>
 
                     </ActionsAppBar>
                     <List component="nav">

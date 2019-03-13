@@ -54,7 +54,7 @@ class Index extends Component {
       } else {
         //Sing in succeeded - switch to chat screen
         //And - change state to logged in
-        localStorage.setItem('username', username);
+        sessionStorage.setItem('username', username);
         this.setState({currentScreen: resources.screens.chat, 
           userState: resources.userStates.loggedIn,
             username: username});

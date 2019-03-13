@@ -129,7 +129,7 @@ module.exports = function(io, dbUtils){
 
                 let usersConnectedToRoom =  [];
                 //Get the clients connected to the room
-                let clientsInRoom =io.sockets.adapter.rooms[conversation.id].sockets;
+                let clientsInRoom =io.sockets.adapter.rooms[conversation.id].sockets || [];
                 
                
                 for(clientID in clientsInRoom){
@@ -141,6 +141,10 @@ module.exports = function(io, dbUtils){
 
                 socket.emit('got selected conversation', {err: err, conversation: conversation, usersConnected: usersConnectedToRoom});
             });
+        });
+
+        socket.on('get current username', function(){
+            socket.emit('got current username', socket.username || '');
         });
 
     });

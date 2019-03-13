@@ -1,16 +1,33 @@
 import React, { Component } from 'react';
 import ChatAppBar from './ChatAppBar';
-import {IconButton} from '@material-ui/core';
+import {IconButton, Chip} from '@material-ui/core';
 import {Search, AddCircle, Delete} from '@material-ui/icons';
-import MenuIcon from '@material-ui/icons/Menu';
 
 
 class ActionsAppBar extends Component{
 
+    constructor(props){
+        super(props);
+        this.state = {
+            username : ''
+        }
+    }
+
+    componentDidMount(){
+        
+    }
+
+    componentDidUpdate(){
+        
+    }
+
+    handleOpenUserProfile = () => {
+
+    }
 
     render(){
         return(
-            <ChatAppBar text = "Conversations" 
+            <ChatAppBar 
             buttons = {<>
                 <IconButton aria-label="Search" color="inherit">
                     <Search color="secondary"/>
@@ -23,9 +40,9 @@ class ActionsAppBar extends Component{
                 </IconButton>
                 </>}
                 leftButtonOrIcon = {
-                    <IconButton color="inherit" aria-label="Menu">
-                        <MenuIcon color = "secondary"/>
-                    </IconButton>
+                    <Chip
+                        label={this.props.username} 
+                        onClick={this.handleOpenUserProfile}/>
                 }/>
                 
         );
