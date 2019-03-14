@@ -43,12 +43,17 @@ class SidePanel extends Component{
             handleError: handleError,
             username: username
         }
+
+        const userSearchListProps = {
+            handleError: handleError,
+            onSwitchView: this.onSwitchView
+        }
         
         return(
             <Grid sm={5} item className = {classes.root}>
                 <ActionsAppBar username = {username} onSwitchView = {this.onSwitchView}/>
                 {this.state.view === conversationView && <ConversationsView {...conversationsListProps}/>}
-                {this.state.view === userSearchView && <UserSearchView {...conversationsListProps}/>}
+                {this.state.view === userSearchView && <UserSearchView {...userSearchListProps}/>}
                 {this.state.view === userProfileView && <UserProfileView {...conversationsListProps}/>}
             </Grid>
             

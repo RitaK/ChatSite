@@ -7,7 +7,10 @@ import {Typography, Grid} from '@material-ui/core';
 
 var styles = theme =>({
     root: {
-        width: '100%'
+        width: '100%',
+        'border-color': "#b2a59e",
+        'border-left-style': "solid",
+        'border-left-width': "1px"
     },
     grow: {
         flexGrow: 1,
@@ -22,7 +25,7 @@ class ChatAppBar extends Component{
         const {classes, text, buttons, leftButtonOrIcon, additionalText} = this.props;
         
         return(
-            <AppBar position = "static" color = "primary" className = {classes.root}>
+            <AppBar elevation = {0} position = "static" color = "primary" className = {classes.root}>
                 <Toolbar>
                     {leftButtonOrIcon}
                     {additionalText}

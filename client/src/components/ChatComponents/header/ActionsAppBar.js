@@ -11,7 +11,7 @@ const popperStyle = {
     zIndex: 1
 }
 
-const {conversations, userSearch, userProfile} = resources.sidePanelViews;
+const {userSearch, userProfile} = resources.sidePanelViews;
 
 class ActionsAppBar extends Component{
 

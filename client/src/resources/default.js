@@ -8,7 +8,9 @@ module.exports = {
         },
     titles: {
         login: "Login", 
-        registration: "Create a New Account"
+        registration: "Create a New Account",
+        profile: "User Profile",
+        userSearch: "Search for a user"
     },
     buttons: {
         login: "Login",

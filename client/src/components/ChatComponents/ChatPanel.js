@@ -15,14 +15,19 @@ var styles = theme =>({
     convPanel: {
         height: 'calc(100vh - 114px)',
         overflow: "scroll",
+        'background-color': '#e8dce2'
     },
     convContainer:{
         height: 'calc(100vh - 64px)'
     },
     msgTextGrid: {
-        'margin-top': '20px',
+        'padding': '10px',
         bottom: 0,
-        position: 'fixed'
+        position: 'fixed',
+        'background-color': '#b7acac',
+        display: 'flex',
+        'align-items': 'center',
+        'vertical-align': 'middle'
     },
     msgDisplayPanel: {
         height: '50px'
@@ -157,8 +162,6 @@ class ChatPanel extends Component{
                     <Grid item className = {classes.msgTextGrid}>
                         <TextArea onSend = {this.onSend}/>
                     </Grid>
-                </Grid>
-                <Grid item>
                 </Grid>
             </Grid>
         );

@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import {TextField} from '@material-ui/core';
+import {Paper, InputBase} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 
 var styles = theme =>({
     msgText: {
-        width: '100vw'
+        width: '100vw',
+        marginLeft: 8,
+        marginRight: 8,
+        flex: 1
     }
 });
 
@@ -41,8 +44,12 @@ class TextArea extends Component{
 
         return(
             <form onSubmit={this.onSend} >
-            <TextField value={newMsgValue} onChange={this.handleNewMsgChange} className = {classes.msgText}>
-            </TextField>
+                <Paper>
+                    <InputBase value={newMsgValue} onChange={this.handleNewMsgChange} className = {classes.msgText} />
+                </Paper>
+                
+                {/* <TextField value={newMsgValue} onChange={this.handleNewMsgChange} className = {classes.msgText}>
+                </TextField> */}
             </form>
         )
     }
