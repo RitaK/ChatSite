@@ -16,7 +16,7 @@ var styles = theme =>({
     convPanel: {
         height: 'calc(100vh - 114px)',
         overflow: "scroll",
-        'background-color': '#e8dce2'
+        /* 'background-color': '#e8dce2' */
     },
     convContainer:{
         height: 'calc(100vh - 64px)'
@@ -25,7 +25,7 @@ var styles = theme =>({
         'padding': '10px',
         bottom: 0,
         position: 'fixed',
-        'background-color': '#b7acac',
+        'background-color': '#b2fef7',
         display: 'flex',
         'align-items': 'center',
         'vertical-align': 'middle'

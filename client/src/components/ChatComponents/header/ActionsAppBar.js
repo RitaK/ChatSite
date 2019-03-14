@@ -60,13 +60,13 @@ class ActionsAppBar extends Component{
             <ChatAppBar 
             buttons = {<>
                 <IconButton aria-label="Search" color="inherit">
-                    <Search color="secondary"/>
+                    <Search />
                 </IconButton>
                 <IconButton onClick={(e) => this.switchView(userSearch)} aria-label="Add" color="inherit">
-                    <AddCircle color="secondary"/>
+                    <AddCircle />
                 </IconButton>
                 <IconButton aria-label="Delete" color="inherit">
-                    <Delete color="secondary"/>
+                    <Delete />
                 </IconButton>
                 <IconButton buttonRef={node => {
                     this.anchorEl = node;}} 
@@ -74,7 +74,7 @@ class ActionsAppBar extends Component{
                     aria-haspopup="true"
                     onClick={this.handleToggle}
                     color="inherit" aria-label="Menu">
-                    <MenuIcon color = "secondary"/>
+                    <MenuIcon />
                 </IconButton>
                 <Popper style = {popperStyle} open={menuOpen} anchorEl={this.anchorEl} transition disablePortal>
                     {({ TransitionProps, placement }) => (

@@ -8,7 +8,6 @@ import resources from '../../../resources/default'
 
 var styles = theme =>({
     topPanel: {
-        'background-color': '#54b4bc',
         height: '10vh',
         display: 'flex',
         'vertical-align': 'middle',
