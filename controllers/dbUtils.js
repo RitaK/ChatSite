@@ -90,11 +90,11 @@ module.exports = function(app){
                         "usernamesInConv": {"$size": users.length.toString()}
                     }] 
             };
-            Conversations.find(query,function(err, docs){
+            Conversations.findOne(query,function(err, conversation){
                 if(err){
                     console.log('Could not find a converstation between ' + users + '. Error:'+ err);
                 }
-                callback(err, docs);
+                callback(err, conversation);
             });
         },
 
@@ -154,11 +154,17 @@ module.exports = function(app){
                     console.log("Error while searching for users:  "+ err);
                 }
                 else {
-                    console.log(docs);
+                    
                     callback(err, docs);
                 }
             });
         },
+
+
+        //TO CONTINUE
+        saveNewConversation : function(){
+
+        }
 
     }
 }

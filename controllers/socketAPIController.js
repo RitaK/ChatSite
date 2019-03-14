@@ -124,23 +124,14 @@ module.exports = function(io, dbUtils){
         
 
         socket.on('selected conversation', function(convID){
-            
             dbUtils.findConversationByID(convID, (err, conversation) =>{
 
-                let usersConnectedToRoom =  [];
-                //Get the clients connected to the room
-                let clientsInRoom =io.sockets.adapter.rooms[conversation.id]? io.sockets.adapter.rooms[conversation.id].sockets : [];
-                
-               
-                for(clientID in clientsInRoom){
-                    let clientSocket = io.sockets.connected[clientID];
-                    if(clientSocket.username){
-                        usersConnectedToRoom.push(clientSocket.username);
-                    }
+                if(!err){
+                    let usersConnectedToRoom =  getUsersConnectedToRoom(conversation);
+                    socket.emit('got selected conversation', {err: err, conversation: conversation, usersConnected: usersConnectedToRoom, privateBetween: false});
                 }
-
-                socket.emit('got selected conversation', {err: err, conversation: conversation, usersConnected: usersConnectedToRoom});
-            });
+                
+            }) ;
         });
 
         socket.on('get current username', function(){
@@ -156,7 +147,38 @@ module.exports = function(io, dbUtils){
             
         });
 
+        socket.on('get private conversation with user', function(withUsername){
+            let usersInConv = [];
+            usersInConv.push(socket.username);
+            usersInConv.push(withUsername)
+            dbUtils.findTwoUsersConversation(usersInConv, (err, conversation) => {
+                if(!err){
+                    let usersConnectedToRoom =  getUsersConnectedToRoom(conversation);
+                    socket.emit('got selected conversation', {err: err, conversation: conversation, usersConnected: usersConnectedToRoom, privateBetween: usersInConv});
+                }
+            });
+            
+        });
         
     });
+
+    const getUsersConnectedToRoom = (conversation) => {
+        let usersConnectedToRoom =  [];
+        //Get the clients connected to the room
+        if(conversation){
+            let clientsInRoom =io.sockets.adapter.rooms[conversation.id]? io.sockets.adapter.rooms[conversation.id].sockets : [];
+        
+        
+            for(clientID in clientsInRoom){
+                let clientSocket = io.sockets.connected[clientID];
+                if(clientSocket.username){
+                    usersConnectedToRoom.push(clientSocket.username);
+                }
+            }
+        }
+        
+        return usersConnectedToRoom;
+    };
 }
+
 

@@ -5,7 +5,7 @@ import SideViewBase from './SideViewBase'
 import resources from '../../../resources/default'
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import {registerToGetSearchedUsers, setUsersSearch} from '../../../api'
+import {registerToGetSearchedUsers, setUsersSearch, getPrivateConversationWithUser} from '../../../api'
 
 var styles = theme =>({
     input: {
@@ -25,7 +25,6 @@ class UserSearchView extends Component{
     constructor(props){
         super(props);
         this.state= {
-            searchText: '',
             usersResults: []
         }
     }
@@ -36,27 +35,29 @@ class UserSearchView extends Component{
                 this.setState({usersResults: users});
             }
             
-        })
+        });
+        setUsersSearch('');
     }
 
     onSearchChange = (event) => {
         setUsersSearch(event.target.value);
-        this.setState({
-            newMsgValue: event.target.value
-        });
     }
+
+    handleListItemClick = (event, username) => {
+        getPrivateConversationWithUser(username);
+    };
 
     render(){
         
         const {onSwitchView, classes} = this.props;
-        const {usersResults, newMsgValue} = this.state
+        const {usersResults} = this.state
 
         return(
             <SideViewBase onSwitchView = {onSwitchView} text={userSearch}
             content = { 
                 <>
                     <Paper>
-                        <InputBase value={newMsgValue} onChange = {this.onSearchChange} className={classes.input} placeholder="Search for a user" />
+                        <InputBase onChange = {this.onSearchChange} className={classes.input} placeholder="Search for a user" />
                     </Paper>
                     <List>
                         {usersResults.map((user) => {
@@ -64,7 +65,8 @@ class UserSearchView extends Component{
                                 return false;
                             }
                             return <ListItem button divider
-                                key = {user._id}>
+                                key = {user._id}
+                                onClick={event => this.handleListItemClick(event, user.username)}>
                                 <ListItemText
                                     primary={user.username}
                                     />

@@ -47,8 +47,13 @@ class ChatPanel extends Component{
 
     componentWillMount(){
 
-        registerToGetConv( (err, conversation, usersConnected) => {
-            this.setState({currentConv: conversation, usersConnected: usersConnected});
+        registerToGetConv( (err, conversation, usersConnected, privateBetween) => {
+            if(conversation){
+                this.setState({currentConv: conversation, usersConnected: usersConnected});
+            } else if(!err && privateBetween){
+
+            }
+            
         });
 
         registerToMsgSent((err, message) => {

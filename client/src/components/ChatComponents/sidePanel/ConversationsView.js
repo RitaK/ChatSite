@@ -27,7 +27,6 @@ class ConversationsView extends Component{
     handleListItemClick = (event, convID) => {
         getSelectedConversation(convID);
         this.setState({ selectedConvId: convID });
-        
     };
 
     render(){
