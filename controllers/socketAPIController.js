@@ -147,6 +147,16 @@ module.exports = function(io, dbUtils){
             socket.emit('got current username', socket.username || '');
         });
 
+        socket.on('get searched users', function(searchValue){
+            dbUtils.findAllUsersWhoBeginWith(searchValue, (err, users) => {
+                if(!err){
+                    socket.emit('got searched users', users);
+                }
+            });
+            
+        });
+
+        
     });
 }
 

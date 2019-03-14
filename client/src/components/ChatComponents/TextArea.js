@@ -47,9 +47,7 @@ class TextArea extends Component{
                 <Paper>
                     <InputBase value={newMsgValue} onChange={this.handleNewMsgChange} className = {classes.msgText} />
                 </Paper>
-                
-                {/* <TextField value={newMsgValue} onChange={this.handleNewMsgChange} className = {classes.msgText}>
-                </TextField> */}
+            
             </form>
         )
     }

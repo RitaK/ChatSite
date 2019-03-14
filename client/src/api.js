@@ -98,3 +98,17 @@ export function registerToUserNotActive(userNotActive){
         userNotActive(username);
     });
 }
+
+/*
+    Searching for users
+*/
+
+export function registerToGetSearchedUsers(setSearchedUsers){
+    socket.on('got searched users', (users) => {
+        setSearchedUsers(users);
+    })
+}
+
+export function setUsersSearch(searchValue){
+    socket.emit('get searched users', searchValue)
+}

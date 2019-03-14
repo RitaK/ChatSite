@@ -146,7 +146,19 @@ module.exports = function(app){
                 }
                 callback(err, docs);
             });
-        }
+        },
+
+        findAllUsersWhoBeginWith: function(searchValue, callback){
+            Users.find({"username" : new RegExp(searchValue, 'i')}, function(err, docs){
+                if(err){
+                    console.log("Error while searching for users:  "+ err);
+                }
+                else {
+                    console.log(docs);
+                    callback(err, docs);
+                }
+            });
+        },
 
     }
 }
