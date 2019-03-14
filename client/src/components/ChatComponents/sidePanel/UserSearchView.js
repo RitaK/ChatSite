@@ -20,6 +20,7 @@ var styles = theme =>({
 });
 
 const {userSearch} = resources.titles;
+const {conversations} = resources.sidePanelViews;
 
 class UserSearchView extends Component{
     constructor(props){
@@ -45,6 +46,7 @@ class UserSearchView extends Component{
 
     handleListItemClick = (event, username) => {
         getPrivateConversationWithUser(username);
+        this.props.onSwitchView(conversations);
     };
 
     render(){
