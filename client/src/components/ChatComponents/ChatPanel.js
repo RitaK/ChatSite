@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import {registerToMsgSent, registerToReceivedMsg, registerToGetConv,
      sendMessage, getSelectedConversation,registerToUserActive, registerToUserNotActive} from './../../api'
 import TextArea from './TextArea'
+import ReactDOM from 'react-dom'
 
 
 var styles = theme =>({
@@ -43,6 +44,7 @@ class ChatPanel extends Component{
             usersConnected: []
         }
         this.messages = React.createRef();
+        this.messagesList = React.createRef();
     }
 
     componentWillMount(){
@@ -98,7 +100,9 @@ class ChatPanel extends Component{
     }
 
     componentDidUpdate(){
-        //console.log(this.messages.current.clientHeight);
+        let messagesGrid =ReactDOM.findDOMNode(this.messages.current);
+        let messagesList =ReactDOM.findDOMNode(this.messagesList.current);
+        messagesGrid.scrollTop = messagesList.clientHeight;
     }
 
     updateMessages = (convID) => {
@@ -149,7 +153,7 @@ class ChatPanel extends Component{
                 </ChatRoomAppBar>
                 <Grid container  className = {classes.convContainer}  direction={'column'}>
                     <Grid ref = {this.messages} className = {classes.convPanel} item>
-                        <List>
+                        <List ref = {this.messagesList} >
                             {messages.map((msg) => {
                                 if(!msg._id){
                                     return false;
