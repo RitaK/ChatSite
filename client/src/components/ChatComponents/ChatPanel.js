@@ -4,7 +4,8 @@ import ChatRoomAppBar from './header/ChatRoomAppBar'
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import {registerToMsgSent, registerToReceivedMsg, registerToGetConv,
-     sendMessage, getSelectedConversation,registerToUserActive, registerToUserNotActive} from './../../api'
+     sendMessage, getSelectedConversation,registerToUserActive, 
+     registerToUserNotActive, startNewConversationWithMessage} from './../../api'
 import TextArea from './TextArea'
 import ReactDOM from 'react-dom'
 
@@ -25,7 +26,7 @@ var styles = theme =>({
         'padding': '10px',
         bottom: 0,
         position: 'fixed',
-        'background-color': '#b2fef7',
+        'background-color': '#9be7ff',
         display: 'flex',
         'align-items': 'center',
         'vertical-align': 'middle'
@@ -49,11 +50,20 @@ class ChatPanel extends Component{
 
     componentWillMount(){
 
-        registerToGetConv( (err, conversation, usersConnected, privateBetween) => {
-            if(conversation){
+        registerToGetConv( (err, conversation, usersConnected, betweenUsers) => {
+            if(!err && conversation){
                 this.setState({currentConv: conversation, usersConnected: usersConnected});
-            } else if(!err && privateBetween){
-
+            } else if(!err && betweenUsers){
+                //If we need to start a new conversation that isn't in the DB yet.
+                //We need the betweenUsers because we can't get it from the conversation variable  
+                let conversation = 
+                {usernamesInConv: betweenUsers,
+                messages: []};
+                this.setState({currentConv: conversation, usersConnected: usersConnected});
+                // NO - I should just present a blank page, and once a user sends a message call the startNewConversation
+                //This should also be the case for group chats. So probably need to delete the privateBetween part
+                //because it doesn't help anything
+                //startNewConversation();
             }
             
         });
@@ -116,7 +126,12 @@ class ChatPanel extends Component{
             timeStamp: this.getCurrDate(),
             message: newMsgValue
         };
-        sendMessage(msgObj, convID);
+        //If the conversation is new and doesnt exist in the DB yet. 
+        if(!convID){
+            startNewConversationWithMessage(this.state.currentConv, msgObj);
+        } else {
+            sendMessage(msgObj, convID);
+        }
     }
 
     newMessageInConv = () => {
@@ -155,7 +170,7 @@ class ChatPanel extends Component{
                     <Grid ref = {this.messages} className = {classes.convPanel} item>
                         <List ref = {this.messagesList} >
                             {messages.map((msg) => {
-                                if(!msg._id){
+                                if(!msg._id || !msg){
                                     return false;
                                 }
                                 return <ListItem 

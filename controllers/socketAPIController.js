@@ -128,7 +128,7 @@ module.exports = function(io, dbUtils){
 
                 if(!err){
                     let usersConnectedToRoom =  getUsersConnectedToRoom(conversation);
-                    socket.emit('got selected conversation', {err: err, conversation: conversation, usersConnected: usersConnectedToRoom, privateBetween: false});
+                    socket.emit('got selected conversation', {err: err, conversation: conversation, usersConnected: usersConnectedToRoom});
                 }
                 
             }) ;
@@ -150,17 +150,52 @@ module.exports = function(io, dbUtils){
         socket.on('get private conversation with user', function(withUsername){
             let usersInConv = [];
             usersInConv.push(socket.username);
-            usersInConv.push(withUsername)
+            usersInConv.push(withUsername);
             dbUtils.findTwoUsersConversation(usersInConv, (err, conversation) => {
+                if(!err ){
+                    let usersConnectedToRoom = [];
+                    //If there is no conversation in the DB
+                    if(!conversation){
+                        let socketsOfConnectedUsers = getConnectedUsersFromUserList(usersInConv);
+                        usersConnectedToRoom = socketsOfConnectedUsers.map((item) => {return item.username});
+                        
+                    }
+                    usersConnectedToRoom =  getUsersConnectedToRoom(conversation);
+                    socket.emit('got selected conversation', {err: err, conversation: conversation, usersConnected: usersConnectedToRoom, betweenUsers: usersInConv});
+                }
+            });
+            
+        });
+
+        socket.on('start new conversation with message', function(conversation, message){
+            message.sender = socket.username;
+            conversation.messages.push(message);
+            console.log(conversation);
+            dbUtils.saveNewConversation(conversation, (err, conversation) => {
                 if(!err){
-                    let usersConnectedToRoom =  getUsersConnectedToRoom(conversation);
-                    socket.emit('got selected conversation', {err: err, conversation: conversation, usersConnected: usersConnectedToRoom, privateBetween: usersInConv});
+                    let socketsOfConnectedUsers = getConnectedUsersFromUserList(conversation.usersInConv);
+                    for(socket in socketsOfConnectedUsers){
+                        socket.join(conversation.id);
+                    }
+                    usersConnectedToRoom = socketsOfConnectedUsers.map((item) => {return item.username});
+                    socket.emit('got selected conversation', {err: err, conversation: conversation, usersConnected: usersConnectedToRoom, betweenUsers: conversation.usernamesInConv});
                 }
             });
             
         });
         
+        
     });
+
+    const getConnectedUsersFromUserList = (usersList) => {
+        let currentlyConnected = [];
+        if(usersList){
+            currentlyConnected= usersList.map((usernameFromList) => {
+                return(connectedUsers.find((item) => item.username === usernameFromList) || false);
+            });
+        }
+        return currentlyConnected;
+    }
 
     const getUsersConnectedToRoom = (conversation) => {
         let usersConnectedToRoom =  [];

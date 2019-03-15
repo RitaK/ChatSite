@@ -25,7 +25,7 @@ class ChatAppBar extends Component{
         const {classes, text, buttons, leftButtonOrIcon, additionalText} = this.props;
         
         return(
-            <AppBar elevation = {2} position = "static" className = {classes.root}>
+            <AppBar elevation = {0} position = "static" className = {classes.root}>
                 <Toolbar>
                     {leftButtonOrIcon}
                     {additionalText}

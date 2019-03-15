@@ -54,8 +54,8 @@ export function getSelectedConversation(convID){
 }
 
  export function registerToGetConv(presentConv){
-    socket.on('got selected conversation', ({err, conversation, usersConnected, privateBetween}) => {
-        presentConv(err, conversation, usersConnected, privateBetween);
+    socket.on('got selected conversation', ({err, conversation, usersConnected, betweenUsers}) => {
+        presentConv(err, conversation, usersConnected, betweenUsers);
     });
 }
 
@@ -119,4 +119,12 @@ export function setUsersSearch(searchValue){
 
 export function getPrivateConversationWithUser(withUsername){
     socket.emit('get private conversation with user', withUsername);
+}
+
+/*
+    Start a new conversation
+*/
+
+export function startNewConversationWithMessage(conversation, withMessage){
+    socket.emit('start new conversation with message', conversation, withMessage);
 }

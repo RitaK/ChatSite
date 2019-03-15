@@ -162,8 +162,27 @@ module.exports = function(app){
 
 
         //TO CONTINUE
-        saveNewConversation : function(){
+        saveNewConversation : function(conversation, cb){
 
+            var newConversation = Conversations({
+                usernamesInConv: conversation.usernamesInConv,
+                groupName: conversation.groupName,
+                messages: conversation.messages
+            });
+            newConversation.save(function(err, conversation) {
+                let errMsg = '';
+
+                if(!err){
+                    console.log('Created new conv' + conversation._id);
+                }
+
+                if(err){
+                    errMsg = 'Error while creating a new conversation: ';
+                    console.log(errMsg + err);
+                }
+
+                cb(err, conversation);
+            });
         }
 
     }
