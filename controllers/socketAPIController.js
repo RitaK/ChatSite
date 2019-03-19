@@ -169,6 +169,7 @@ module.exports = function(io, dbUtils){
                     }
                     usersConnectedToRoom = socketsOfConnectedUsers.map((item) => {return item.username});
                     socket.emit('got selected conversation', {err: err, conversation: conversation, usersConnected: usersConnectedToRoom, betweenUsers: conversation.usernamesInConv});
+                    notifyOtherUsersAboutConv(conversation.usernamesInConv, socket);
                     getUserConversations(socket);
                 }
             });
@@ -231,7 +232,19 @@ module.exports = function(io, dbUtils){
         }
     };
 
-    
+    const notifyOtherUsersAboutConv = (usersInConv, socket) => {
+        if(usersInConv && usersInConv.length > 0){
+            usersInConv.forEach((username) => {
+                //If the current username is not the user who initiated the conversation
+                if(username != socket.username){
+                    let user = connectedUsers.find((item) => item.username === username);
+                    if(user.socket){
+                        getUserConversations(user.socket);
+                    }
+                }  
+            })
+        }
+    }
 }
 
 
