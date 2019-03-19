@@ -33,7 +33,7 @@ class UserSearchView extends Component{
     componentDidMount(){
         registerToGetSearchedUsers((users) => {
             if(users){
-                this.setState({usersResults: users});
+                this.setState({usersResults: this.cutCurrUserFromSearch(users)});
             }
             
         });
@@ -49,6 +49,17 @@ class UserSearchView extends Component{
         this.props.onSwitchView(conversations);
     };
 
+    cutCurrUserFromSearch = (users) => {
+        let username = sessionStorage ? sessionStorage.username : '';
+        let filteredItems;
+        if(username){
+            filteredItems = users.filter(function(user) {
+                return user.username !== username
+              })
+        }
+        return filteredItems || users;
+    }
+    
     render(){
         
         const {onSwitchView, classes} = this.props;
