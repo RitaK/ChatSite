@@ -107,19 +107,9 @@ module.exports = function(io, dbUtils){
         });
 
         //Get all user's conversations (when logged in)
-        socket.on('get user conversations', function(username){
+        socket.on('get user conversations', function(){
             //Get all user's conversations and send them to the client
-            dbUtils.getAllUserConv(username, function(err, docs){
-                if(err){
-
-                } else {
-                    docs.forEach(function(doc){
-                        socket.join(doc.id);
-                        io.to(doc.id).emit('chat user connected', {username: username});
-                    });
-                }
-                socket.emit('got user conversations', {err: err, conversations: docs});
-            });
+            getUserConversations(socket);
         })
         
 
@@ -179,6 +169,7 @@ module.exports = function(io, dbUtils){
                     }
                     usersConnectedToRoom = socketsOfConnectedUsers.map((item) => {return item.username});
                     socket.emit('got selected conversation', {err: err, conversation: conversation, usersConnected: usersConnectedToRoom, betweenUsers: conversation.usernamesInConv});
+                    getUserConversations(socket);
                 }
             });
             
@@ -214,6 +205,33 @@ module.exports = function(io, dbUtils){
         
         return usersConnectedToRoom;
     };
+
+    const getUserConversations = (socket) => {
+        if(socket && socket.username){
+            dbUtils.getAllUserConv(socket.username, function(err, conversations){
+                if(err){
+        
+                } else {
+                    //Leave all rooms 
+                    for(room in socket.rooms ){
+                        // For each room the user is in, excluding his own room
+                        if(room != socket.id){
+                              socket.leave(room);
+                        }
+                      };
+    
+                    //Connect to all updated conversations rooms
+                    conversations.forEach(function(conv){
+                        socket.join(conv.id);
+                        io.to(conv.id).emit('chat user connected', {username: socket.username});
+                    });
+                }
+                socket.emit('got user conversations', {err: err, conversations: conversations});
+            });
+        }
+    };
+
+    
 }
 
 

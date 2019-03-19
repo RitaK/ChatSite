@@ -35,8 +35,8 @@ export function registerToLoginLogoutEvents(onDisconnect, onUserLogin){
     Get conversations
 */
 
-export function getAllUserConversations(username){
-    socket.emit('get user conversations', username);
+export function getAllUserConversations(){
+    socket.emit('get user conversations');
 }
 
 export function registerToGetConversations(setConversations){

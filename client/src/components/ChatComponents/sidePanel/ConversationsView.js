@@ -21,7 +21,7 @@ class ConversationsView extends Component{
             }
         });
 
-        getAllUserConversations(this.props.username);
+        getAllUserConversations();
     };
 
     handleListItemClick = (event, convID) => {
