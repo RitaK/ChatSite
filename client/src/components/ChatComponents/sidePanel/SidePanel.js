@@ -23,7 +23,8 @@ class SidePanel extends Component{
     constructor(props){
         super(props);
         this.state = {
-            view: conversationView
+            view: conversationView,
+            refreshSideBarConversations: this.props.refreshSideBarConversations || true
         }
     }
     onSwitchView = (viewName) =>{
@@ -36,12 +37,25 @@ class SidePanel extends Component{
         }
     }
 
+    componentWillReceiveProps(props) {
+        const { refreshSideBarConversations} = this.props;
+        if (refreshSideBarConversations !== props.refreshSideBarConversations) {
+            this.setState({refreshSideBarConversations: props.refreshSideBarConversations});
+        }
+        
+    }
+
     render(){
-        const {classes, username, handleError} = this.props;
+        const {classes, username, handleError, unreadMessages, readMessagesAtConv, convIdToInc} = this.props;
+        const {refreshSideBarConversations} = this.state;
 
         const conversationsListProps = {
             handleError: handleError,
-            username: username
+            username: username, 
+            unreadMessages: unreadMessages,
+            readMessagesAtConv: readMessagesAtConv, 
+            refreshSideBarConversations: refreshSideBarConversations, 
+            convIdToInc: convIdToInc ? convIdToInc : ''
         }
 
         const userSearchListProps = {

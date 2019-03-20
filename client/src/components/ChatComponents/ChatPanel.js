@@ -60,10 +60,6 @@ class ChatPanel extends Component{
                 {usernamesInConv: betweenUsers,
                 messages: []};
                 this.setState({currentConv: conversation, usersConnected: usersConnected});
-                // NO - I should just present a blank page, and once a user sends a message call the startNewConversation
-                //This should also be the case for group chats. So probably need to delete the privateBetween part
-                //because it doesn't help anything
-                //startNewConversation();
             }
             
         });
@@ -79,7 +75,7 @@ class ChatPanel extends Component{
             if(this.state.currentConv._id && convID === this.state.currentConv._id){
                 this.updateMessages(convID);
             } else {
-                this.newMessageInConv(convID)
+                this.props.updateNewMessageOnSidePanel(convID)
             }
         });
     }
@@ -134,9 +130,6 @@ class ChatPanel extends Component{
         }
     }
 
-    newMessageInConv = () => {
-        //update the 
-    }
 
     getCurrDate = () => {
         var today = new Date();

@@ -13,24 +13,40 @@ var styles = theme =>({
 });
 
 class Chat extends Component{
-    /* constructor(props){
+    constructor(props){
         super(props);
-        
-    } */
+        this.state = {
+            refreshSideBarConversations : true,
+            convIdToInc: ''
+        }
+    }
 
-    
+    updateNewMessageOnSidePanel = (convID) => {
+        this.setState({refreshSideBarConversations: !this.state.refreshSideBarConversations, convIdToInc: convID})
+    }
+
     render(){
         const {handleError, username, classes} = this.props;
+        const {refreshSideBarConversations, convIdToInc} = this.state;
 
         const chatPanelProps = {
             handleError: handleError,
-            username: username
+            username: username,
+            updateNewMessageOnSidePanel: this.updateNewMessageOnSidePanel
         }
+
+        const sidePanelProps = {
+            selectedConv: this.selectedConv,
+            handleError: handleError,
+            username: username, 
+            refreshSideBarConversations: refreshSideBarConversations, 
+            convIdToInc: convIdToInc
+        }
+        
         return(
             <Grid container direction={'row'} className = {classes.root}>
-                <SidePanel selectedConv = {this.selectedConv} handleError = {handleError} username = {username}/>
+                <SidePanel {...sidePanelProps}/>
                 <ChatPanel {...chatPanelProps}/>
-                
             </Grid>
             
         );
