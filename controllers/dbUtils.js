@@ -140,11 +140,11 @@ module.exports = function(app){
 
         saveMsgToConvByID: function(convID, message, callback){
             var query = {_id: convID};
-            Conversations.findOneAndUpdate(query, {$push: {messages: message}}, function(err, docs){
+            Conversations.findOneAndUpdate(query, {$push: {messages: message}}, {new: true}, function(err, docs){
                 if(err){
-                    console.log('Error in saving a message: '+ err + docs);
+                    console.log('Error in saving a message: '+ err + docs.messages[docs.messages.length-1]);
                 }
-                callback(err, docs);
+                callback(err, docs.messages[docs.messages.length-1]);
             });
         },
 

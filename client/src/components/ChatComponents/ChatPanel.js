@@ -8,6 +8,7 @@ import {registerToMsgSent, registerToReceivedMsg, registerToGetConv,
      registerToUserNotActive, startNewConversationWithMessage} from './../../api'
 import TextArea from './TextArea'
 import ReactDOM from 'react-dom'
+import {updateLastMessageInLocalStorage} from '../../localStorageUtils'
 
 
 var styles = theme =>({
@@ -67,13 +68,17 @@ class ChatPanel extends Component{
         registerToMsgSent((err, message) => {
             let {currentConv} = this.state;
             if(currentConv._id){
+                console.log(message._id);
+                updateLastMessageInLocalStorage(currentConv._id, message._id);
                 this.updateMessages(currentConv._id);
             }
         });
 
         registerToReceivedMsg((convID, err, message) => {
+            console.log(message._id);
             if(this.state.currentConv._id && convID === this.state.currentConv._id){
                 this.updateMessages(convID);
+                updateLastMessageInLocalStorage(convID, message._id);
             } else {
                 this.props.updateNewMessageOnSidePanel(convID)
             }

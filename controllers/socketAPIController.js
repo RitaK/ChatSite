@@ -57,10 +57,11 @@ module.exports = function(io, dbUtils){
             if(data.message){
                 data.message.sender = socket.username;
 
-                dbUtils.saveMsgToConvByID(data.convID, data.message, (err,docs) => {
-                    let msgInfo = {err: err, message: data.message};
-                    socket.emit('message sent', msgInfo);
-                    io.to(data.convID).emit('message received', {convID: data.convID, ...msgInfo});
+                dbUtils.saveMsgToConvByID(data.convID, data.message, (err,message) => {
+                    let msgInfo = {err: err, message: message};
+                    socket.emit('message sent', {...msgInfo});
+                    socket.broadcast.to(data.convID).emit('message received', {convID: data.convID, ...msgInfo});
+                    //io.to(data.convID).emit('message received', {convID: data.convID, ...msgInfo});
                 });
             }
         });
@@ -175,8 +176,6 @@ module.exports = function(io, dbUtils){
             });
             
         });
-        
-        
     });
 
     const getConnectedUsersFromUserList = (usersList) => {
@@ -238,7 +237,7 @@ module.exports = function(io, dbUtils){
                 //If the current username is not the user who initiated the conversation
                 if(username != socket.username){
                     let user = connectedUsers.find((item) => item.username === username);
-                    if(user.socket){
+                    if(!!user && user.socket){
                         getUserConversations(user.socket);
                     }
                 }  
