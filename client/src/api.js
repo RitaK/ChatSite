@@ -1,7 +1,7 @@
 import openSocket from 'socket.io-client';
 /* import { resolve } from 'url';
 import { rejects } from 'assert'; */
-const  socket = openSocket('http://192.168.86.99:5000');
+const  socket = openSocket('http://localhost:5000');
 
 /*
     Login and logout
@@ -40,8 +40,8 @@ export function getAllUserConversations(){
 }
 
 export function registerToGetConversations(setConversations){
-    socket.on('got user conversations', ({err, conversations}) => {
-        setConversations(err, conversations);
+    socket.on('got user conversations', ({err, conversations, withSelectedConvID = ''}) => {
+        setConversations(err, conversations, withSelectedConvID);
     });
 }
 

@@ -171,7 +171,7 @@ module.exports = function(io, dbUtils){
                     usersConnectedToRoom = socketsOfConnectedUsers.map((item) => {return item.username});
                     socket.emit('got selected conversation', {err: err, conversation: conversation, usersConnected: usersConnectedToRoom, betweenUsers: conversation.usernamesInConv});
                     notifyOtherUsersAboutConv(conversation.usernamesInConv, socket);
-                    getUserConversations(socket);
+                    getUserConversations(socket, conversation.id);
                 }
             });
             
@@ -206,7 +206,7 @@ module.exports = function(io, dbUtils){
         return usersConnectedToRoom;
     };
 
-    const getUserConversations = (socket) => {
+    const getUserConversations = (socket, withSelectedConvID) => {
         if(socket && socket.username){
             dbUtils.getAllUserConv(socket.username, function(err, conversations){
                 if(err){
@@ -226,7 +226,7 @@ module.exports = function(io, dbUtils){
                         io.to(conv.id).emit('chat user connected', {username: socket.username});
                     });
                 }
-                socket.emit('got user conversations', {err: err, conversations: conversations});
+                socket.emit('got user conversations', {err: err, conversations: conversations, withSelectedConvID: withSelectedConvID || '' });
             });
         }
     };

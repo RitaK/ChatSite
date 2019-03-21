@@ -16,14 +16,25 @@ class ConversationsView extends Component{
     }
     componentDidMount(){
         //On getting the conversations
-        registerToGetConversations((err, conversations) => {
+        registerToGetConversations((err, conversations,  withSelectedConvID) => {
             if(err){
                 this.props.handleError(err);
             } else{
                 let convsObjects = conversations.map(item => {
                     return {conv: item, numOfUnreadMessages: 0}
-                })
-                this.setState({conversations: updateUnreadMessagesState(convsObjects)});
+                });
+
+                if(withSelectedConvID){
+                    this.markLastMsgInConvAsSeenInLS(convsObjects, withSelectedConvID);
+                }
+                
+                this.setState((state) => {
+                    let selectedConvId = state.selectedConvId;
+                    if(withSelectedConvID){
+                        selectedConvId = withSelectedConvID;
+                    }
+                    return {conversations: updateUnreadMessagesState(convsObjects), selectedConvId: selectedConvId}
+                });
             }
         });
 
@@ -33,14 +44,7 @@ class ConversationsView extends Component{
     handleListItemClick = (event, convID) => {
         getSelectedConversation(convID);
 
-        let convObj = this.state.conversations.find(convObj => {
-            return convObj.conv._id === convID;
-        });
-        let messages = convObj.conv.messages;
-        let lastMsg = messages ? messages[messages.length-1] : '';
-        if (lastMsg && lastMsg._id){
-            updateLastMessageInLocalStorage(convID, lastMsg._id);
-        }
+        this.markLastMsgInConvAsSeenInLS(this.state.conversations, convID);
         
         this.setState((state) => {
             let newConvs = state.conversations.map((item) => {
@@ -70,7 +74,19 @@ class ConversationsView extends Component{
         }
     }
 
-
+    markLastMsgInConvAsSeenInLS = (conversations, convID) =>{
+        let convObj = conversations.find(convObj => {
+            return convObj.conv._id === convID;
+        });
+        if(convObj){
+            let messages = convObj.conv.messages;
+            let lastMsg = messages ? messages[messages.length-1] : '';
+            if (lastMsg && lastMsg._id){
+                updateLastMessageInLocalStorage(convID, lastMsg._id);
+            }
+        }
+        
+    }
 
     render(){
         const {conversations, selectedConvId} = this.state;
