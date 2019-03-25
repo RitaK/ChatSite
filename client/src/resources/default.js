@@ -10,7 +10,12 @@ module.exports = {
         login: "Login", 
         registration: "Create a New Account",
         profile: "User Profile",
-        userSearch: "Search for a user"
+        userSearch: "Search for a user",
+        newGroup: "Create a new group"
+    },
+    labels: {
+        profile: "Profile", 
+        newGroup: "New Group"
     },
     buttons: {
         login: "Login",
@@ -23,6 +28,7 @@ module.exports = {
     sidePanelViews: {
         conversations: "conversations",
         userSearch: "userSearch",
-        userProfile: "userProfile"
+        userProfile: "userProfile",
+        newGroup: "New Group"
     }
   } 

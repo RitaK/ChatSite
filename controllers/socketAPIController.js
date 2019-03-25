@@ -169,7 +169,11 @@ module.exports = function(io, dbUtils){
                         socket.join(conversation.id);
                     }
                     usersConnectedToRoom = socketsOfConnectedUsers.map((item) => {return item.username});
-                    socket.emit('got selected conversation', {err: err, conversation: conversation, usersConnected: usersConnectedToRoom, betweenUsers: conversation.usernamesInConv});
+                    let resultData = {err: err,
+                        conversation: conversation,
+                        usersConnected: usersConnectedToRoom,
+                        betweenUsers: conversation.usernamesInConv};
+                    socket.emit('got selected conversation', resultData);
                     notifyOtherUsersAboutConv(conversation.usernamesInConv, socket);
                     getUserConversations(socket, conversation.id);
                 }

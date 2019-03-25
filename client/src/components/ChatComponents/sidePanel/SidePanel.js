@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import ConversationsView from './ConversationsView'
 import UserSearchView from './UserSearchView'
 import UserProfileView from './UserProfileView'
+import NewGroupView from './NewGroupView'
 import resources from '../../../resources/default'
 
 var styles = theme =>({
@@ -16,7 +17,7 @@ var styles = theme =>({
 
 });
 
-const {conversations: conversationView, userSearch: userSearchView, userProfile: userProfileView} = resources.sidePanelViews;
+const {conversations: conversationView, userSearch: userSearchView, userProfile: userProfileView, newGroup: newGroupView} = resources.sidePanelViews;
 
 class SidePanel extends Component{
 
@@ -62,11 +63,17 @@ class SidePanel extends Component{
             handleError: handleError,
             onSwitchView: this.onSwitchView
         }
+
+        const newGroupViewProps = {
+            handleError: handleError,
+            onSwitchView: this.onSwitchView
+        }
         
         return(
             <Grid sm={5} item className = {classes.root}>
                 <ActionsAppBar username = {username} onSwitchView = {this.onSwitchView}/>
                 {this.state.view === conversationView && <ConversationsView {...conversationsListProps}/>}
+                {this.state.view === newGroupView && <NewGroupView {...newGroupViewProps}/>}
                 {this.state.view === userSearchView && <UserSearchView {...userSearchListProps}/>}
                 {this.state.view === userProfileView && <UserProfileView {...conversationsListProps}/>}
             </Grid>

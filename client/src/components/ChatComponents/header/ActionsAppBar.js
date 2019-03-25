@@ -11,7 +11,8 @@ const popperStyle = {
     zIndex: 1
 }
 
-const {userSearch, userProfile} = resources.sidePanelViews;
+const {userSearch, userProfile, newGroup} = resources.sidePanelViews;
+const {newGroup: newGroupLabel, profile: profileLabel} = resources.labels
 
 class ActionsAppBar extends Component{
 
@@ -85,7 +86,8 @@ class ActionsAppBar extends Component{
                         <Paper>
                         <ClickAwayListener onClickAway={this.handleClose}>
                             <MenuList>
-                            <MenuItem  onClick={(e) => this.handleClose(e, userProfile) }>Profile</MenuItem>
+                            <MenuItem  onClick={(e) => this.handleClose(e, newGroup) }>{newGroupLabel}</MenuItem>
+                            <MenuItem  onClick={(e) => this.handleClose(e, userProfile) }>{profileLabel}</MenuItem>
                             <MenuItem value = {"logout"} onClick={this.handleClose}>Logout</MenuItem>
                             </MenuList>
                         </ClickAwayListener>

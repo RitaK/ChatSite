@@ -19,10 +19,10 @@ var styles = theme =>({
 
 });
 
-const {userSearch: userSearchTitle} = resources.titles;
+const {newGroup: newGroupTitle} = resources.titles;
 const {conversations: converstationsView, userSearch: userSearchView} = resources.sidePanelViews;
 
-class UserSearchView extends Component{
+class NewGroupView extends Component{
 
 
     handleListItemClick = (event, username) => {
@@ -40,7 +40,7 @@ class UserSearchView extends Component{
         }
 
         return(
-            <SideViewBase onSwitchView = {onSwitchView} text={userSearchTitle}
+            <SideViewBase onSwitchView = {onSwitchView} text={newGroupTitle}
             content = { 
                     <UserSearchPanel {...userSearchPanelProps}/>
                 }/>
@@ -48,11 +48,11 @@ class UserSearchView extends Component{
     }
 }
 
-UserSearchView.propTypes = {
+NewGroupView.propTypes = {
     classes: PropTypes.object.isRequired
 }
 
-export default withStyles(styles)(UserSearchView);
+export default withStyles(styles)(NewGroupView);
 
 
 
