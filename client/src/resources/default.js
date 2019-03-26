@@ -11,7 +11,8 @@ module.exports = {
         registration: "Create a New Account",
         profile: "User Profile",
         userSearch: "Search for a user",
-        newGroup: "Create a new group"
+        newGroup: "Create a new group",
+        groupParticipants: "Add participants "
     },
     labels: {
         profile: "Profile", 
@@ -30,5 +31,8 @@ module.exports = {
         userSearch: "userSearch",
         userProfile: "userProfile",
         newGroup: "New Group"
+    },
+    placeholders:{
+        groupName: "Group name"
     }
   } 

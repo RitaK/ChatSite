@@ -36,7 +36,6 @@ class Chat extends Component{
         }
 
         const sidePanelProps = {
-            selectedConv: this.selectedConv,
             handleError: handleError,
             username: username, 
             refreshSideBarConversations: refreshSideBarConversations, 

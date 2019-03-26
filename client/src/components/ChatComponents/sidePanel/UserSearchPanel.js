@@ -29,7 +29,11 @@ class UserSearchPanel extends Component{
     componentDidMount(){
         registerToGetSearchedUsers((users) => {
             if(users){
-                this.setState({originalUsersResults: users, presentedUsersResults: this.cutCurrUserFromSearch(users)});
+                this.setState((state) => {
+                    let excludeUsers = this.props.excludeUsers || [] ;
+                    return {originalUsersResults: users,
+                         presentedUsersResults: this.cutCurrAndExcludedUsersFromSearch(excludeUsers, users)}
+                });
             }
             
         });
@@ -44,30 +48,34 @@ class UserSearchPanel extends Component{
         //If we get any users to exclude from the search list
         //And it's not ampty
         let {excludeUsers} = props;
+        if(excludeUsers){
+            this.cutCurrAndExcludedUsersFromSearch(excludeUsers)
+        }
+    }
+
+    cutCurrAndExcludedUsersFromSearch = (excludeUsers, newUsersResults) => {
         let currUsername = sessionStorage ? sessionStorage.username : '';
-        if(excludeUsers && currUsername){
+        if(currUsername){
             this.setState((state) => {
                 let filteredItems;
-                
-                filteredItems = state.originalUsersResults.filter(function(user) {
+                let users = newUsersResults ?  newUsersResults : state.originalUsersResults;
+                filteredItems = users.filter(function(user) {
                     //Check if this user is not already checked and if this is not the current user
-                    return !excludeUsers.includes(user.username) &&
+                    let needsToBeExcluded = excludeUsers ? excludeUsers.includes(user.username) : false;
+                    return !needsToBeExcluded &&
                         user.username !== currUsername
                 })
                 return {presentedUsersResults: filteredItems || this.cutCurrUserFromSearch(state.originalUsersResults)}
             });
         }
-    }
-
-    cutCurrUserFromSearch = (users) => {
-        let username = sessionStorage ? sessionStorage.username : '';
+        /* let username = sessionStorage ? sessionStorage.username : '';
         let filteredItems;
         if(username){
             filteredItems = users.filter(function(user) {
                 return user.username !== username
               })
         }
-        return filteredItems || users;
+        return filteredItems || users; */
     }
     
     render(){

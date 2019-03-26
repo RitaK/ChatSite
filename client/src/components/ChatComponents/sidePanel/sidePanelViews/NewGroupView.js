@@ -6,7 +6,7 @@ import resources from '../../../../resources/default'
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { } from '../../../../api'
-import {Chip, IconButton} from '@material-ui/core';
+import {Chip, IconButton, TextField} from '@material-ui/core';
 import {ArrowForward} from '@material-ui/icons';
 
 var styles = theme =>({
@@ -24,15 +24,19 @@ var styles = theme =>({
 
 });
 
-const {newGroup: newGroupTitle} = resources.titles;
-//const {conversations: converstationsView, userSearch: userSearchView} = resources.sidePanelViews;
+const {newGroup: newGroupTitle, groupParticipants: groupParticipantsTitle} = resources.titles;
+const {groupName: groupNamePlaceHolder} = resources.placeholders;
+const {conversations: converstationsView, userSearch: userSearchView} = resources.sidePanelViews;
 
 class NewGroupView extends Component{
 
     constructor(props){
         super(props);
         this.state = {
-            newGroupParticipants: []
+            newGroupParticipants: [],
+            participantsChosen: false, 
+            groupName: {},
+            groupIsReady : false
         }
     }
 
@@ -60,14 +64,30 @@ class NewGroupView extends Component{
         });
     }
     
-    createNewGroup = () => {
+    choseParticipants = () => {
+        this.setState({participantsChosen: true});
+    }
 
+    createNewGroup = () => {
+        //getPrivateConversationWithUser(username);
+        this.props.onSwitchView(converstationsView);
+    }
+
+    onGroupNameChange = (event) => {
+        let regSpace = /\s/g;
+        let groupNameValue = event.target.value;
+        if(regSpace.test(event.target.value)){
+            this.setState({groupName:{text: groupNameValue, error: true}, groupIsReady: false})
+        }
+        else{
+            this.setState({groupName: {text: groupNameValue}, groupIsReady: groupNameValue.length > 0 });
+        }
     }
 
     render(){
         
         const {onSwitchView, classes} = this.props;
-        const {newGroupParticipants} = this.state;
+        const {newGroupParticipants, participantsChosen, groupName, groupIsReady} = this.state;
 
         const userSearchPanelProps = {
             handleListItemClick: this.handleListItemClick,
@@ -75,26 +95,47 @@ class NewGroupView extends Component{
         }
 
         return(
-            <SideViewBase onSwitchView = {onSwitchView} text={newGroupTitle}
-            additionalInfo = {
-                newGroupParticipants.map((username) => {
-                        return <Chip
-                                key = {username}
-                                label= {username}
-                                onDelete={event => this.handleDeleteParticipant(username)}
-                                className={classes.chip}
-                                />
+            participantsChosen ? 
+                <SideViewBase onSwitchView = {onSwitchView} text={newGroupTitle} 
+                content = {
+                    <>
+                        <TextField
+                        required
+                        label={groupNamePlaceHolder}
+                        className={classes.textField}
+                        color = "primary"
+                        margin="normal"
+                        onChange = {this.onGroupNameChange}
+                        error= {groupName.error} 
+                        />
+                        {groupIsReady && 
+                            <IconButton color="inherit" onClick={(e) => this.createNewGroup()}>
+                                <ArrowForward color= "primary"/>
+                            </IconButton>}
+                    </>
+                    
+                        
+                }/> :
+                <SideViewBase onSwitchView = {onSwitchView} text={groupParticipantsTitle}
+                    additionalInfo = {
+                        newGroupParticipants.map((username) => {
+                                return <Chip
+                                        key = {username}
+                                        label= {username}
+                                        onDelete={event => this.handleDeleteParticipant(username)}
+                                        className={classes.chip}
+                                        />
+                                    }
+                                )
                             }
-                        )
-            }
-            content = { 
-                <UserSearchPanel {...userSearchPanelProps}/>
-            }
-            footer = {
-                newGroupParticipants.length > 0 &&
-                    <IconButton color="inherit" onClick={(e) => this.createNewGroup()}>
-                        <ArrowForward color= "primary"/>
-                    </IconButton>}/>
+                    content = { 
+                        <UserSearchPanel {...userSearchPanelProps}/>
+                    }
+                    footer = {
+                        newGroupParticipants.length > 0 &&
+                            <IconButton color="inherit" onClick={(e) => this.choseParticipants()}>
+                                <ArrowForward color= "primary"/>
+                            </IconButton>}/>
         );
     }
 }
