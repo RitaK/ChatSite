@@ -33,7 +33,7 @@ class UserSearchView extends Component{
     
     render(){
         
-        const {onSwitchView, classes} = this.props;
+        const {onSwitchView} = this.props;
 
         const userSearchPanelProps = {
             handleListItemClick: this.handleListItemClick

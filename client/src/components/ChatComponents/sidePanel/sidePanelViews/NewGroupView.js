@@ -6,7 +6,8 @@ import resources from '../../../../resources/default'
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import { } from '../../../../api'
-import {Chip, Paper} from '@material-ui/core';
+import {Chip, IconButton} from '@material-ui/core';
+import {ArrowForward} from '@material-ui/icons';
 
 var styles = theme =>({
     input: {
@@ -19,16 +20,12 @@ var styles = theme =>({
     },
     chip: {
         margin: theme.spacing.unit,
-    },
-    participants: {
-        overflow: 'scroll',
-        'max-height': theme.spacing.unit * 12
     }
 
 });
 
 const {newGroup: newGroupTitle} = resources.titles;
-const {conversations: converstationsView, userSearch: userSearchView} = resources.sidePanelViews;
+//const {conversations: converstationsView, userSearch: userSearchView} = resources.sidePanelViews;
 
 class NewGroupView extends Component{
 
@@ -63,6 +60,10 @@ class NewGroupView extends Component{
         });
     }
     
+    createNewGroup = () => {
+
+    }
+
     render(){
         
         const {onSwitchView, classes} = this.props;
@@ -75,21 +76,25 @@ class NewGroupView extends Component{
 
         return(
             <SideViewBase onSwitchView = {onSwitchView} text={newGroupTitle}
-            content = { 
-                <>
-                    <Paper elevation= {0} className = {classes.participants}>
-                        {newGroupParticipants.map((username) => {
-                            return <Chip
-                                    label= {username}
-                                    onDelete={event => this.handleDeleteParticipant(username)}
-                                    className={classes.chip}
-                                    />
+            additionalInfo = {
+                newGroupParticipants.map((username) => {
+                        return <Chip
+                                key = {username}
+                                label= {username}
+                                onDelete={event => this.handleDeleteParticipant(username)}
+                                className={classes.chip}
+                                />
                             }
-                        )}
-                    </Paper>
-                    <UserSearchPanel {...userSearchPanelProps}/>
-                </>
-                }/>
+                        )
+            }
+            content = { 
+                <UserSearchPanel {...userSearchPanelProps}/>
+            }
+            footer = {
+                newGroupParticipants.length > 0 &&
+                    <IconButton color="inherit" onClick={(e) => this.createNewGroup()}>
+                        <ArrowForward color= "primary"/>
+                    </IconButton>}/>
         );
     }
 }
