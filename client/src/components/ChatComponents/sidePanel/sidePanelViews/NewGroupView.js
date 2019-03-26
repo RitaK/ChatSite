@@ -20,6 +20,9 @@ var styles = theme =>({
     },
     chip: {
         margin: theme.spacing.unit,
+    },
+    textField: {
+        width: '100%'
     }
 
 });
@@ -108,14 +111,13 @@ class NewGroupView extends Component{
                         onChange = {this.onGroupNameChange}
                         error= {groupName.error} 
                         />
-                        {groupIsReady && 
+                    </>     
+                }
+                footer = {groupIsReady && 
                             <IconButton color="inherit" onClick={(e) => this.createNewGroup()}>
                                 <ArrowForward color= "primary"/>
                             </IconButton>}
-                    </>
-                    
-                        
-                }/> :
+                        /> :
                 <SideViewBase onSwitchView = {onSwitchView} text={groupParticipantsTitle}
                     additionalInfo = {
                         newGroupParticipants.map((username) => {
@@ -131,8 +133,7 @@ class NewGroupView extends Component{
                     content = { 
                         <UserSearchPanel {...userSearchPanelProps}/>
                     }
-                    footer = {
-                        newGroupParticipants.length > 0 &&
+                    footer = {newGroupParticipants.length > 0 &&
                             <IconButton color="inherit" onClick={(e) => this.choseParticipants()}>
                                 <ArrowForward color= "primary"/>
                             </IconButton>}/>
