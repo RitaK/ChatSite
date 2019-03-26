@@ -21,14 +21,15 @@ class UserSearchPanel extends Component{
     constructor(props){
         super(props);
         this.state= {
-            usersResults: []
+            originalUsersResults: [],
+            presentedUsersResults: []
         }
     }
 
     componentDidMount(){
         registerToGetSearchedUsers((users) => {
             if(users){
-                this.setState({usersResults: this.cutCurrUserFromSearch(users)});
+                this.setState({originalUsersResults: users, presentedUsersResults: this.cutCurrUserFromSearch(users)});
             }
             
         });
@@ -39,6 +40,24 @@ class UserSearchPanel extends Component{
         setUsersSearch(event.target.value);
     }
 
+    componentWillReceiveProps(props){
+        //If we get any users to exclude from the search list
+        //And it's not ampty
+        let {excludeUsers} = props;
+        let currUsername = sessionStorage ? sessionStorage.username : '';
+        if(excludeUsers && currUsername){
+            this.setState((state) => {
+                let filteredItems;
+                
+                filteredItems = state.originalUsersResults.filter(function(user) {
+                    //Check if this user is not already checked and if this is not the current user
+                    return !excludeUsers.includes(user.username) &&
+                        user.username !== currUsername
+                })
+                return {presentedUsersResults: filteredItems || this.cutCurrUserFromSearch(state.originalUsersResults)}
+            });
+        }
+    }
 
     cutCurrUserFromSearch = (users) => {
         let username = sessionStorage ? sessionStorage.username : '';
@@ -54,7 +73,7 @@ class UserSearchPanel extends Component{
     render(){
         
         const {classes, handleListItemClick} = this.props;
-        const {usersResults} = this.state
+        const {presentedUsersResults} = this.state
 
         return(
         <>
@@ -62,7 +81,7 @@ class UserSearchPanel extends Component{
                 <InputBase onChange = {this.onSearchChange} className={classes.input} placeholder="Search for a user" />
             </Paper>
             <List>
-                {usersResults.map((user) => {
+                {presentedUsersResults.map((user) => {
                     if(!user._id || !user.username){
                         return false;
                     }

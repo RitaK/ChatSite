@@ -3,10 +3,10 @@ import {Grid} from '@material-ui/core';
 import ActionsAppBar from '../header/ActionsAppBar'
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import ConversationsView from './ConversationsView'
-import UserSearchView from './UserSearchView'
-import UserProfileView from './UserProfileView'
-import NewGroupView from './NewGroupView'
+import ConversationsView from './sidePanelViews/ConversationsView'
+import UserSearchView from './sidePanelViews/UserSearchView'
+import UserProfileView from './sidePanelViews/UserProfileView'
+import NewGroupView from './sidePanelViews/NewGroupView'
 import resources from '../../../resources/default'
 
 var styles = theme =>({

@@ -1,8 +1,8 @@
 
 import React, { Component } from 'react';
 import { List, ListItem, ListItemText, Chip} from '@material-ui/core';
-import {getAllUserConversations, registerToGetConversations, getSelectedConversation} from '../../../api'
-import {updateUnreadMessagesState, updateLastMessageInLocalStorage} from '../../../localStorageUtils'
+import {getAllUserConversations, registerToGetConversations, getSelectedConversation} from '../../../../api'
+import {updateUnreadMessagesState, updateLastMessageInLocalStorage} from '../../../../localStorageUtils'
 
 class ConversationsView extends Component{
 

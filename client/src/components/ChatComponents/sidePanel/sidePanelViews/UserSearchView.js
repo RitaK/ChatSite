@@ -1,11 +1,11 @@
 
 import React, { Component } from 'react';
-import SideViewBase from './SideViewBase'
-import UserSearchPanel from './UserSearchPanel'
-import resources from '../../../resources/default'
+import SideViewBase from '../SideViewBase'
+import UserSearchPanel from '../UserSearchPanel'
+import resources from '../../../../resources/default'
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import { getPrivateConversationWithUser} from '../../../api'
+import { getPrivateConversationWithUser} from '../../../../api'
 
 var styles = theme =>({
     input: {
