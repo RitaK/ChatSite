@@ -34,5 +34,9 @@ module.exports = {
     },
     placeholders:{
         groupName: "Group name"
+    },
+    errors:{
+        groupNameErr: "Error in group name input",
+        groupNameExistsError: "This group name already exists"
     }
   } 

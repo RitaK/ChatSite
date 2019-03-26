@@ -138,30 +138,31 @@ module.exports = function(io, dbUtils){
             
         });
 
-        socket.on('get private conversation with user', function(withUsername){
-            let usersInConv = [];
-            usersInConv.push(socket.username);
-            usersInConv.push(withUsername);
+        socket.on('get private conversation with user', function(withUsernames, groupName){
+            let usersInConv = [...withUsernames, socket.username];
             dbUtils.findTwoUsersConversation(usersInConv, (err, conversation) => {
                 if(!err ){
                     let usersConnectedToRoom = [];
                     //If there is no conversation in the DB
+                    usersConnectedToRoom =  getUsersConnectedToRoom(conversation);
+
                     if(!conversation){
                         let socketsOfConnectedUsers = getConnectedUsersFromUserList(usersInConv);
                         usersConnectedToRoom = socketsOfConnectedUsers.map((item) => {return item.username});
-                        
                     }
-                    usersConnectedToRoom =  getUsersConnectedToRoom(conversation);
-                    socket.emit('got selected conversation', {err: err, conversation: conversation, usersConnected: usersConnectedToRoom, betweenUsers: usersInConv});
+                    
+                    socket.emit('got selected conversation', {err: err, conversation: conversation, usersConnected: usersConnectedToRoom, betweenUsers: usersInConv, groupName: groupName});
                 }
             });
             
         });
 
-        socket.on('start new conversation with message', function(conversation, message){
-            message.sender = socket.username;
-            conversation.messages.push(message);
-            console.log(conversation);
+        socket.on('start new conversation', function(conversation, message){
+            //If a message is also sent to start the conversation off - add it 
+            if(message){
+                message.sender = socket.username;
+                conversation.messages.push(message);
+            }
             dbUtils.saveNewConversation(conversation, (err, conversation) => {
                 if(!err){
                     let socketsOfConnectedUsers = getConnectedUsersFromUserList(conversation.usersInConv);
@@ -180,6 +181,14 @@ module.exports = function(io, dbUtils){
             });
             
         });
+
+        socket.on('check group name', function(groupName){
+            dbUtils.findGroupConversation(groupName, (err, docs) => {
+                socket.emit("checked group name", {err, docs});
+            })
+        });
+        
+        
     });
 
     const getConnectedUsersFromUserList = (usersList) => {
@@ -197,7 +206,6 @@ module.exports = function(io, dbUtils){
         //Get the clients connected to the room
         if(conversation){
             let clientsInRoom =io.sockets.adapter.rooms[conversation.id]? io.sockets.adapter.rooms[conversation.id].sockets : [];
-        
         
             for(clientID in clientsInRoom){
                 let clientSocket = io.sockets.connected[clientID];

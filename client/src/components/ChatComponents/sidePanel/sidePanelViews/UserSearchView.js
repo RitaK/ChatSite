@@ -5,7 +5,7 @@ import UserSearchPanel from '../UserSearchPanel'
 import resources from '../../../../resources/default'
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import { getPrivateConversationWithUser} from '../../../../api'
+import { getPrivateConversationWithUsers} from '../../../../api'
 
 var styles = theme =>({
     input: {
@@ -26,7 +26,7 @@ class UserSearchView extends Component{
 
 
     handleListItemClick = (event, username) => {
-        getPrivateConversationWithUser(username);
+        getPrivateConversationWithUsers([username]);
         this.props.onSwitchView(converstationsView);
     };
 

@@ -40,7 +40,7 @@ export function getAllUserConversations(){
 }
 
 export function registerToGetConversations(setConversations){
-    socket.on('got user conversations', ({err, conversations, withSelectedConvID = ''}) => {
+    socket.on('got user conversations', ({err, conversations, withSelectedConvID = '', groupName = ''}) => {
         setConversations(err, conversations, withSelectedConvID);
     });
 }
@@ -117,8 +117,8 @@ export function setUsersSearch(searchValue){
     Get private conversation
 */
 
-export function getPrivateConversationWithUser(withUsername){
-    socket.emit('get private conversation with user', withUsername);
+export function getPrivateConversationWithUsers(withUsernames, groupName){
+    socket.emit('get private conversation with user', withUsernames, groupName);
 }
 
 /*
@@ -126,5 +126,23 @@ export function getPrivateConversationWithUser(withUsername){
 */
 
 export function startNewConversationWithMessage(conversation, withMessage){
-    socket.emit('start new conversation with message', conversation, withMessage);
+    socket.emit('start new conversation', conversation, withMessage);
+}
+
+export function startNewConversation(conversation) {
+    socket.emit('start new conversation', conversation);
+}
+
+/*
+    Check if groupname is valid
+*/
+
+export function checkGroupName(groupname) {
+    socket.emit('check group name', groupname);
+}
+
+export function registerToCheckedGroupName(afterGroupNameChecked){
+    socket.on('checked group name', ({err, docs}) => {
+        afterGroupNameChecked(err, docs);
+    })
 }

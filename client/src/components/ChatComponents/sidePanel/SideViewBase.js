@@ -30,7 +30,6 @@ var styles = theme =>({
         overflow: 'scroll',
         'max-height': theme.spacing.unit * 12
     }
-
 });
 
 const {conversations} = resources.sidePanelViews;

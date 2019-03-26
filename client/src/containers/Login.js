@@ -65,7 +65,12 @@ class Login extends Component{
     }
 
     handleLogin = () => {
-        this.props.handleLogin(this.state.username.text, this.state.password.text);
+        let {username, password} = this.state;
+        if(!username.error && !password.error){
+            this.props.handleLogin(username.text, password.text);
+        } else {
+            //handleError
+        }
     }
 
     handleSwitchCreateAccount = () =>{

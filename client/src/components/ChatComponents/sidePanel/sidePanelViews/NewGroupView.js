@@ -5,7 +5,7 @@ import UserSearchPanel from '../UserSearchPanel'
 import resources from '../../../../resources/default'
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import { } from '../../../../api'
+import {getPrivateConversationWithUsers, registerToCheckedGroupName, checkGroupName} from '../../../../api'
 import {Chip, IconButton, TextField} from '@material-ui/core';
 import {ArrowForward} from '@material-ui/icons';
 
@@ -30,6 +30,7 @@ var styles = theme =>({
 const {newGroup: newGroupTitle, groupParticipants: groupParticipantsTitle} = resources.titles;
 const {groupName: groupNamePlaceHolder} = resources.placeholders;
 const {conversations: converstationsView, userSearch: userSearchView} = resources.sidePanelViews;
+const {groupNameErr, groupNameExistsError} = resources.errors;
 
 class NewGroupView extends Component{
 
@@ -41,6 +42,22 @@ class NewGroupView extends Component{
             groupName: {},
             groupIsReady : false
         }
+    }
+
+    componentDidMount(){
+        registerToCheckedGroupName((err, docs) => {
+            let {newGroupParticipants, groupName} = this.state;
+            if(docs.length === 0 && !err){
+                getPrivateConversationWithUsers(newGroupParticipants, groupName);
+                this.props.onSwitchView(converstationsView);
+            }else{
+                if(docs.length > 0){
+                    this.handleError(groupNameExistsError);
+                }
+                
+            }
+            
+        })
     }
 
     handleListItemClick = (event, username) => {
@@ -72,18 +89,32 @@ class NewGroupView extends Component{
     }
 
     createNewGroup = () => {
-        //getPrivateConversationWithUser(username);
-        this.props.onSwitchView(converstationsView);
+        let {groupName} = this.state;
+        if(!groupName.err){
+            checkGroupName(groupName.text);
+        } else {
+            this.handleError(groupNameErr);
+        }
+        
     }
 
     onGroupNameChange = (event) => {
-        let regSpace = /\s/g;
+        /* let regSpace = /\s/g;
         let groupNameValue = event.target.value;
         if(regSpace.test(event.target.value)){
             this.setState({groupName:{text: groupNameValue, error: true}, groupIsReady: false})
         }
         else{
             this.setState({groupName: {text: groupNameValue}, groupIsReady: groupNameValue.length > 0 });
+        } */
+        let groupNameValue = event.target.value;
+        this.setState({groupName: {text: groupNameValue}, groupIsReady: groupNameValue.length > 0 });
+    }
+
+    handleError(err){
+        let {handleError} =  this.props;
+        if(handleError){
+            handleError(err);
         }
     }
 
@@ -137,7 +168,7 @@ class NewGroupView extends Component{
                             <IconButton color="inherit" onClick={(e) => this.choseParticipants()}>
                                 <ArrowForward color= "primary"/>
                             </IconButton>}/>
-        );
+            );
     }
 }
 

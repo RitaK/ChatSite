@@ -51,15 +51,19 @@ class ChatPanel extends Component{
 
     componentWillMount(){
 
-        registerToGetConv( (err, conversation, usersConnected, betweenUsers) => {
+        registerToGetConv( (err, conversation, usersConnected, betweenUsers, groupName) => {
             if(!err && conversation){
                 this.setState({currentConv: conversation, usersConnected: usersConnected});
             } else if(!err && betweenUsers){
                 //If we need to start a new conversation that isn't in the DB yet.
                 //We need the betweenUsers because we can't get it from the conversation variable  
                 let conversation = 
-                {usernamesInConv: betweenUsers,
-                messages: []};
+                    {usernamesInConv: betweenUsers,
+                    messages: []};
+                    //If we got a group conversation to start
+                    if(groupName){
+                        conversation.groupName =  groupName
+                    }
                 this.setState({currentConv: conversation, usersConnected: usersConnected});
             }
             
