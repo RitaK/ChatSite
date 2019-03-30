@@ -7,6 +7,10 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import resources from '../../../resources/default'
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import { CSSTransition } from 'react-transition-group';
+import {setChatSearch} from '../../../api'
+
+
 
 
 const popperStyle = {
@@ -23,7 +27,11 @@ var styles = theme =>({
         'border-radius': '10em',
         transition: 'all .5s',
         display: 'inline-flex',
-        width: '48px'
+        width: '48px',
+        'padding-left': '7px',
+        'padding-right': '7px',
+        'margin-top': '7px',
+        cursor: 'pointer'
     },
     '@keyframes expand': {
         '0%': {
@@ -41,11 +49,15 @@ var styles = theme =>({
             width: '50%'
         },
         '100%': {
-            width: '48px%'
+            width: '48px'
         }
      },
      buttons:{
          float: 'right'
+     },
+     searchBtn: {
+         'margin-top': '7px'
+
      }
 });
 
@@ -61,7 +73,8 @@ class ActionsAppBar extends Component{
         this.state = {
             username : '',
             menuOpen: false,
-            searchOpened: false
+            searchOpened: false,
+            inputClasses: [props.classes.searchInput]
         }
     }
 
@@ -95,37 +108,41 @@ class ActionsAppBar extends Component{
         this.props.onSwitchView(viewName);
     }
 
-    openSearch = () =>{
-        this.setState((state) => {
-            return {searchOpened: true}
-        })
+    openSearch = (e) =>{
+        console.log(this.state.searchOpened);
+        let {classes: {inputExpand, searchInput}} = this.props;
+        if(!this.state.searchOpened){
+            let searchInputClasses= [searchInput];
+            searchInputClasses.push(inputExpand);
+            this.setState({searchOpened: true, inputClasses: searchInputClasses})
+        }
+        
     }
 
     closeSearch = () =>{
+        let {classes: {inputShrink, searchInput}} = this.props;
         this.setState((state) => {
-            return {searchOpened: false}
+            let searchInputClasses= [searchInput];
+            searchInputClasses.push(inputShrink);
+            return {searchOpened: false, inputClasses: searchInputClasses}
         })
     }
 
+    onSearchChange = (event) =>{
+        setChatSearch(event.target.value);
+    }
+
     render(){
-        const { menuOpen, searchOpened } = this.state;
-        const {classes: {inputExpand, buttons, searchInput, inputShrink}} = this.props;
+        const { menuOpen, searchOpened, inputClasses } = this.state;
+        const {classes: {buttons, searchBtn}} = this.props;
 
-        const searchInputClasses= [searchInput];
-        if(searchOpened){
-            searchInputClasses.push(inputExpand);
-        } else{
-            searchInputClasses.push(inputShrink);
-        }
-
+        console.log("when rendering: "+searchOpened);
         return(
             <ChatAppBar 
             buttons = {<>
-                <Paper elevation ={0} className = {searchInputClasses.join(' ')}>
-                    <IconButton  aria-label="Search" color="inherit" onFocus={this.openSearch}
+                <Paper elevation ={0} className = {inputClasses.join(' ')} onFocus={this.openSearch}
                     onBlur={this.closeSearch}>
-                            <Search />
-                    </IconButton>
+                        <Search className = {searchBtn} onClick={e => {this.openSearch(e)}}/>
                     <InputBase type = "search"  onChange = {this.onSearchChange}  />
                 </Paper>
                 <IconButton 
@@ -138,14 +155,21 @@ class ActionsAppBar extends Component{
                     color="inherit" aria-label="Menu">
                     <MenuIcon />
                 </IconButton>
-                {!searchOpened && <>
-                    <IconButton className = {buttons} onClick={(e) => this.switchView(userSearch)} aria-label="Add" color="inherit">
-                        <AddCircle />
-                    </IconButton>
-                    <IconButton className = {buttons} aria-label="Delete" color="inherit">
-                        <Delete />
-                    </IconButton>
-                </>}
+                {!searchOpened && 
+                    <CSSTransition 
+                        classNames = "fade"
+                        in = {searchOpened}
+                        timeout = {1000}
+                        appear = {true}>
+                        <>
+                            <IconButton className = {buttons} onClick={(e) => this.switchView(userSearch)} aria-label="Add" color="inherit">
+                                <AddCircle />
+                            </IconButton>
+                            <IconButton className = {buttons} aria-label="Delete" color="inherit">
+                                <Delete />
+                            </IconButton>
+                        </>
+                    </CSSTransition>}
                 <Popper style = {popperStyle} open={menuOpen} anchorEl={this.anchorEl} transition disablePortal>
                     {({ TransitionProps, placement }) => (
                     <Grow

@@ -10,7 +10,8 @@ var styles = theme =>({
         width: '100%',
         'border-color': "#b2a59e",
         'border-left-style': "solid",
-        'border-left-width': "1px"
+        'border-left-width': "1px",
+        'max-height': '64px'
     },
     grow: {
         flexGrow: 1,

@@ -146,3 +146,11 @@ export function registerToCheckedGroupName(afterGroupNameChecked){
         afterGroupNameChecked(err, docs);
     })
 }
+
+
+/*
+    Searching for chat in chat conversations view
+*/
+export function setChatSearch(searchValue){
+    socket.emit('get searched conversations', searchValue)
+}

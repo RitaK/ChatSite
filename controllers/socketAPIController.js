@@ -188,7 +188,17 @@ module.exports = function(io, dbUtils){
             })
         });
         
-        
+        socket.on('get searched conversations', function(searchValue){
+            if(socket && socket.username){
+                dbUtils.findAllConvsFromSearchVal(searchValue, socket.username, (err, conversations) => {
+                    if(!err){
+                        socket.emit('got user conversations', {err: err, conversations: conversations});
+                    }
+                });
+            }
+            
+        });
+
     });
 
     const getConnectedUsersFromUserList = (usersList) => {

@@ -183,7 +183,37 @@ module.exports = function(app){
 
                 cb(err, conversation);
             });
-        }
+        },
+
+        findAllConvsFromSearchVal: function(searchValue, username, callback){
+            var regex = new RegExp(searchValue, 'i')
+            var query = {
+                '$and': [
+                    {
+                        '$or': [
+                            {
+                                usernamesInConv: regex
+                            }, 
+                            {
+                                groupName: regex
+                            }]
+                    },
+                    {
+                        usernamesInConv : {"$in": username}
+                    }
+                    ] 
+            };
+            //= {usernamesInConv: new RegExp(searchValue, 'i')};
+            Conversations.find(query, function(err, docs){
+                if(err){
+                    console.log("Error while searching for users:  "+ err);
+                }
+                else {
+                    
+                    callback(err, docs);
+                }
+            });
+        },
 
     }
 }
