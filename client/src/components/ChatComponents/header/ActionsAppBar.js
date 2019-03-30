@@ -15,30 +15,33 @@ const popperStyle = {
 
 var styles = theme =>({
     inputExpand: {
-        animation: 'expand 1s ease-in forwards',
-        padding: '5px',
-        'background-color': 'white',
-        'border-radius': '20px'
+        animation: 'expand 0.5s ease-in forwards'
     },
-    searchSlide: {
-        animation: 'slide 1s ease-in forwards',
+    searchInput: {
+        'background-color': 'white',
+        border: 'solid 1px #ccc',
+        'border-radius': '10em',
+        transition: 'all .5s',
+        display: 'inline-flex',
+        width: '48px'
     },
     '@keyframes expand': {
         '0%': {
-            width: 0,
-            //transform: 'translateX(0%)'
+            width: '48px'
         },
         '100%': {
-            width: '50%',
-            //transform: 'translateX(96px)'
+            width: '50%'
         }
      },
-     '@keyframes slide': {
+     inputShrink:{
+        animation: 'shrink 0.5s ease-in forwards'
+     },
+     '@keyframes shrink': {
         '0%': {
-            transform: 'translateX(0%)'
+            width: '50%'
         },
         '100%': {
-            transform: 'translateX(96px)'
+            width: '48px%'
         }
      },
      buttons:{
@@ -94,23 +97,37 @@ class ActionsAppBar extends Component{
 
     openSearch = () =>{
         this.setState((state) => {
-            return {searchOpened: !state.searchOpened}
+            return {searchOpened: true}
         })
     }
+
+    closeSearch = () =>{
+        this.setState((state) => {
+            return {searchOpened: false}
+        })
+    }
+
     render(){
         const { menuOpen, searchOpened } = this.state;
-        const {classes: {searchSlide, inputExpand, buttons}} = this.props;
+        const {classes: {inputExpand, buttons, searchInput, inputShrink}} = this.props;
+
+        const searchInputClasses= [searchInput];
+        if(searchOpened){
+            searchInputClasses.push(inputExpand);
+        } else{
+            searchInputClasses.push(inputShrink);
+        }
 
         return(
             <ChatAppBar 
             buttons = {<>
-                {searchOpened &&
-                    <>
-                        <InputBase type = "search" className = {inputExpand} onChange = {this.onSearchChange}  />
-                    </>}
-                <IconButton  aria-label="Search" color="inherit" onClick={(e) => this.openSearch()}>
-                        <Search />
-                </IconButton>
+                <Paper elevation ={0} className = {searchInputClasses.join(' ')}>
+                    <IconButton  aria-label="Search" color="inherit" onFocus={this.openSearch}
+                    onBlur={this.closeSearch}>
+                            <Search />
+                    </IconButton>
+                    <InputBase type = "search"  onChange = {this.onSearchChange}  />
+                </Paper>
                 <IconButton 
                     className = {buttons}
                     buttonRef={node => {
