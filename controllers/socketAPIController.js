@@ -150,7 +150,7 @@ module.exports = function(io, dbUtils){
                         let socketsOfConnectedUsers = getConnectedUsersFromUserList(usersInConv);
                         usersConnectedToRoom = socketsOfConnectedUsers.map((item) => {return item.username});
                     }
-                    
+                    console.log("ani popopopo " + groupName);
                     socket.emit('got selected conversation', {err: err, conversation: conversation, usersConnected: usersConnectedToRoom, betweenUsers: usersInConv, groupName: groupName});
                 }
             });

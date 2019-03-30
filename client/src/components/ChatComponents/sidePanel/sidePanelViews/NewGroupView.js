@@ -48,7 +48,7 @@ class NewGroupView extends Component{
         registerToCheckedGroupName((err, docs) => {
             let {newGroupParticipants, groupName} = this.state;
             if(docs.length === 0 && !err){
-                getPrivateConversationWithUsers(newGroupParticipants, groupName);
+                getPrivateConversationWithUsers(newGroupParticipants, groupName.text);
                 this.props.onSwitchView(converstationsView);
             }else{
                 if(docs.length > 0){

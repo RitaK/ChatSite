@@ -54,8 +54,8 @@ export function getSelectedConversation(convID){
 }
 
  export function registerToGetConv(presentConv){
-    socket.on('got selected conversation', ({err, conversation, usersConnected, betweenUsers}) => {
-        presentConv(err, conversation, usersConnected, betweenUsers);
+    socket.on('got selected conversation', ({err, conversation, usersConnected, betweenUsers, groupName}) => {
+        presentConv(err, conversation, usersConnected, betweenUsers, groupName);
     });
 }
 

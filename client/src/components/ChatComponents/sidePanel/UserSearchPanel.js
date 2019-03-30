@@ -7,13 +7,16 @@ import {registerToGetSearchedUsers, setUsersSearch} from '../../../api'
 
 var styles = theme =>({
     input: {
-        marginLeft: 8,
         flex: 1,
         width: '100%'
     },
     grow: {
         flexGrow: 1,
-      }
+      },
+    inputPaper: {
+        'padding-left': 8,
+        'padding-right': 8
+    }
 
 });
 
@@ -85,8 +88,8 @@ class UserSearchPanel extends Component{
 
         return(
         <>
-            <Paper>
-                <InputBase onChange = {this.onSearchChange} className={classes.input} placeholder="Search for a user" />
+            <Paper className={classes.inputPaper} >
+                <InputBase type = "search" onChange = {this.onSearchChange} className={classes.input} placeholder="Search for a user" />
             </Paper>
             <List>
                 {presentedUsersResults.map((user) => {
