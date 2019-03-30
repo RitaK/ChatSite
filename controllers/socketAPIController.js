@@ -160,6 +160,9 @@ module.exports = function(io, dbUtils){
             //If a message is also sent to start the conversation off - add it 
             if(message){
                 message.sender = socket.username;
+                if(!conversation.messages){
+                    conversation.messages = [];
+                }
                 conversation.messages.push(message);
             }
             dbUtils.saveNewConversation(conversation, (err, conversation) => {

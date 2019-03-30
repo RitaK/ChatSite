@@ -8,7 +8,7 @@ import {Typography, Grid} from '@material-ui/core';
 var styles = theme =>({
     root: {
         width: '100%',
-        'border-color': "#b2a59e",
+        'border-color': "#b2a59e5c",
         'border-left-style': "solid",
         'border-left-width': "1px",
         'max-height': '64px'

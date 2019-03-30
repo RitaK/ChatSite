@@ -136,7 +136,6 @@ class ActionsAppBar extends Component{
         const { menuOpen, searchOpened, inputClasses } = this.state;
         const {classes: {buttons, searchBtn}} = this.props;
 
-        console.log("when rendering: "+searchOpened);
         return(
             <ChatAppBar 
             buttons = {<>

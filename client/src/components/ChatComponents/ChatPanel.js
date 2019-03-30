@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Grid, List, ListItem, ListItemText, Paper} from '@material-ui/core';
+import {Grid, List, ListItem, ListItemText, Paper, Typography} from '@material-ui/core';
 import ChatRoomAppBar from './header/ChatRoomAppBar'
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
@@ -21,7 +21,10 @@ var styles = theme =>({
         /* 'background-color': '#e8dce2' */
     },
     convContainer:{
-        height: 'calc(100vh - 64px)'
+        height: 'calc(100vh - 64px)',
+        'border-left-style': 'solid',
+        'border-left-width': '1px',
+        'border-left-color': '#b2a59e5c'
     },
     msgTextGrid: {
         'padding': '10px',
@@ -44,6 +47,9 @@ var styles = theme =>({
     },
     userMessageLi: {
         'justify-content': 'flex-end'
+    },
+    msgTime: {
+        float: 'right'
     }
 
 });
@@ -138,7 +144,7 @@ class ChatPanel extends Component{
         
         let convID = this.state.currentConv._id;
         let msgObj = {
-            timeStamp: this.getCurrDate(),
+            timeStamp: new Date(),//this.getCurrDate(),
             message: newMsgValue
         };
         //If the conversation is new and doesnt exist in the DB yet. 
@@ -163,9 +169,19 @@ class ChatPanel extends Component{
         if (mm < 10) {
         mm = '0' + mm;
         }
-
+        
         today = mm + '/' + dd + '/' + yyyy;
         return today;
+    }
+
+    getTime = (date) => {
+        let time = new Date(date);
+        if(time){
+            var hrs = time.getHours();
+            var mins = time.getMinutes(); 
+    
+            return hrs + ':' + mins ;
+        }
     }
 
     checkUserMsg = (senderName) => {
@@ -198,9 +214,13 @@ class ChatPanel extends Component{
                                 return <ListItem className = {this.checkUserMsg(msg.sender)}
                                     key = {msg._id}>
                                     <Paper className = {classes.message}>
+                                        <Typography variant="subtitle2"  color="primary">
+                                            {msg.sender}
+                                        </Typography>
                                         <ListItemText 
                                             primary={msg.message}
-                                            secondary = {msg.sender}/>
+                                            secondary = {msg.timeStamp && this.getTime(msg.timeStamp)}
+                                            secondaryTypographyProps = {{className : classes.msgTime}}/>
                                     </Paper>
                                     
                                     </ListItem>}
