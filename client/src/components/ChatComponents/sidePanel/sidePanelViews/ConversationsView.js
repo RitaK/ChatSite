@@ -88,6 +88,17 @@ class ConversationsView extends Component{
         
     }
 
+    getUserPrivateConv = (convObj) => {
+        let username = sessionStorage.getItem("username");
+        let userFromPrivateConv = '';
+        if(username){
+            userFromPrivateConv = convObj.conv.usernamesInConv.filter(item => {
+                return item !==username;
+            })
+        }
+        return userFromPrivateConv.length === 1 ? userFromPrivateConv : '';
+    }
+
     render(){
         const {conversations, selectedConvId} = this.state;
         
@@ -99,8 +110,9 @@ class ConversationsView extends Component{
                         onClick={event => this.handleListItemClick(event, convObj.conv._id)}
                         key = {convObj.conv._id}>
                         <ListItemText
-                            primary={convObj.conv.groupName}
-                            secondary = {convObj.conv.usernamesInConv}
+                            primary={convObj.conv.groupName || this.getUserPrivateConv(convObj)}
+                            secondary = {convObj.conv.usernamesInConv.length > 2 ?
+                                 convObj.conv.usernamesInConv.join(', ') : ''}
                             />
                         {convObj.numOfUnreadMessages > 0 &&
                             <Chip label={convObj.numOfUnreadMessages} color = "secondary" />}
