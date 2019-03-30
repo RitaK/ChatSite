@@ -14,7 +14,10 @@ var styles = theme =>({
     },
     grow: {
         flexGrow: 1,
-      }
+      },
+    buttons:{
+        width: '80%'
+    }
 
 });
 

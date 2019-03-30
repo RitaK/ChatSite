@@ -70,7 +70,6 @@ class Index extends Component {
   }
 
   render() {
-    //const currScreen = this.state.currentScreen;
     const {login, registration, chat} = resources.screens;
 
     const LoginProps = {

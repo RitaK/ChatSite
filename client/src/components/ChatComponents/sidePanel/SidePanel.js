@@ -70,7 +70,7 @@ class SidePanel extends Component{
         }
         
         return(
-            <Grid sm={5} item className = {classes.root}>
+            <Grid sm={4} item className = {classes.root}>
                 <ActionsAppBar username = {username} onSwitchView = {this.onSwitchView}/>
                 {this.state.view === conversationView && <ConversationsView {...conversationsListProps}/>}
                 {this.state.view === newGroupView && <NewGroupView {...newGroupViewProps}/>}

@@ -54,9 +54,7 @@ class NewGroupView extends Component{
                 if(docs.length > 0){
                     this.handleError(groupNameExistsError);
                 }
-                
             }
-            
         })
     }
 

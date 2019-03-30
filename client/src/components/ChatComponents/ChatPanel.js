@@ -164,7 +164,7 @@ class ChatPanel extends Component{
         const {currentConv: {messages = [], usernamesInConv = []}, usersConnected} = this.state;
 
         return(
-            <Grid sm={7} item className = {classes.root}>
+            <Grid sm={8} item className = {classes.root}>
                 <ChatRoomAppBar currParticipants = {usernamesInConv} username = {username} usersConnected = {usersConnected}>
 
                 </ChatRoomAppBar>
