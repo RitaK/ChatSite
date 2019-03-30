@@ -67,14 +67,14 @@ class ChatPanel extends Component{
             } else if(!err && betweenUsers){
                 //If we need to start a new conversation that isn't in the DB yet.
                 //We need the betweenUsers because we can't get it from the conversation variable  
-                let conversation = 
+                let newConversation = 
                     {usernamesInConv: betweenUsers,
                     messages: []};
                     //If we got a group conversation to start
-                    if(groupName){
-                        conversation.groupName =  groupName
+                    if(groupName && groupName !== ''){
+                        newConversation.groupName =  groupName
                     }
-                this.setState({currentConv: conversation, usersConnected: usersConnected});
+                this.setState({currentConv: newConversation, usersConnected: usersConnected});
             }
             
         });
@@ -208,7 +208,7 @@ class ChatPanel extends Component{
                         </List>
                     </Grid>
                     <Grid item className = {classes.msgTextGrid}>
-                        <TextArea onSend = {this.onSend}/>
+                        <TextArea onSend = {(e) => this.onSend(e)}/>
                     </Grid>
                 </Grid>
             </Grid>
