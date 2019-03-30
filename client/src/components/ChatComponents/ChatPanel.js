@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Grid, List, ListItem, ListItemText} from '@material-ui/core';
+import {Grid, List, ListItem, ListItemText, Paper} from '@material-ui/core';
 import ChatRoomAppBar from './header/ChatRoomAppBar'
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
@@ -34,6 +34,16 @@ var styles = theme =>({
     },
     msgDisplayPanel: {
         height: '50px'
+    },
+    message:{
+        'border-color': '#b2a59e',
+        'border-style': 'solid',
+        'border-radius': '6px',
+        'border-width': '1px',
+        'padding': '5px'
+    },
+    userMessageLi: {
+        'justify-content': 'flex-end'
     }
 
 });
@@ -157,6 +167,16 @@ class ChatPanel extends Component{
         today = mm + '/' + dd + '/' + yyyy;
         return today;
     }
+
+    checkUserMsg = (senderName) => {
+        let {userMessageLi} = this.props.classes;
+        let username = sessionStorage.getItem("username");
+        let resultIsSender = false;
+        if(userMessageLi && username){
+            resultIsSender = senderName === username;
+        }
+        return resultIsSender ? userMessageLi : '';
+    }
     
     render(){
 
@@ -175,12 +195,14 @@ class ChatPanel extends Component{
                                 if(!msg._id || !msg){
                                     return false;
                                 }
-                                return <ListItem 
+                                return <ListItem className = {this.checkUserMsg(msg.sender)}
                                     key = {msg._id}>
-                                    <ListItemText
-                                        primary={msg.message}
-                                        secondary = {msg.sender}
-                                        />
+                                    <Paper className = {classes.message}>
+                                        <ListItemText 
+                                            primary={msg.message}
+                                            secondary = {msg.sender}/>
+                                    </Paper>
+                                    
                                     </ListItem>}
                                 )}
                         </List>
